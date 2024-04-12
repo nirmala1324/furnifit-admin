@@ -1,0 +1,6 @@
+@mixin mobileStyles {
+  // Insert mobile-specific styles here
+  @media (max-width: 767px) {
+    @content;
+  }
+}

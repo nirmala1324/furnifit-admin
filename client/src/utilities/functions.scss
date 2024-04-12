@@ -1,0 +1,16 @@
+// Function to convert pixels to viewport height (vh)
+@function toVh($value) {
+  @return ($value / var(--viewport-height)) * 100vh;
+}
+
+// Function to convert pixels to viewport width (vw)
+@function toVw($value) {
+  @return ($value / var(--viewport-width)) * 100vw;
+}
+
+// Function to convert pixels to em units
+$browser-context: 16; // Default
+
+@function toEm($pixels, $context: $browser-context) {
+  @return #{$pixels/$context}em;
+}

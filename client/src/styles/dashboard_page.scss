@@ -1,0 +1,10 @@
+@use "../utilities/functions.scss" as func;
+@import "../utilities/mixins.scss";
+
+.font {
+  color: white;
+
+  @include mobileStyles {
+    color: red;
+  }
+}

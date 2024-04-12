@@ -5,10 +5,22 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Site in MERN Trial</title>
+    <link rel="stylesheet" href="./src/styles/index.scss">
+    <script type="script" src="responsive.js"></script>
   </head>
   <body>
     <div class="gradient-bg">
+      <svg xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+            <feBlend in="SourceGraphic" in2="goo" />
+          </filter>
+        </defs>
+      </svg>
       <div class="gradients-container">
+        <div class="grad1"></div>
         <div class="grad2"></div>
         <div class="grad3"></div>
         <div class="grad4"></div>
