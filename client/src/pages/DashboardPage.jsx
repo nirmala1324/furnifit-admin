@@ -7,15 +7,21 @@ const DashboardPage = () => {
   const [users, setUsers] = useState([]);
 
   // Calling API GET data from Database
+  const getUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/getUsers");
+      return response.data;
+    } catch (error) {
+      console.log("Error fetching users: ", error);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/getUsers")
-      .then((users) => {
-        console.log(users);
-        setUsers(users.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    getUsers().then((users) => {
+      console.log(users);
+      setUsers(users);
+    }).catch((err) => console.error("Error in getUsers: ", err))
+  }, [])
 
   // HTML
   return (
