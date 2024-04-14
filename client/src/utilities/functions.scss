@@ -1,16 +1,255 @@
-// Function to convert pixels to viewport height (vh)
-@function toVh($value) {
-  @return ($value / var(--viewport-height)) * 100vh;
-}
+// --------------------------------------------------------------
+// Use
+// --------------------------------------------------------------
+@use 'sass:math';
 
-// Function to convert pixels to viewport width (vw)
-@function toVw($value) {
-  @return ($value / var(--viewport-width)) * 100vw;
-}
 
-// Function to convert pixels to em units
+//Function to convert pixels to em units
 $browser-context: 16; // Default
 
 @function toEm($pixels, $context: $browser-context) {
   @return #{$pixels/$context}em;
 }
+
+// --------------------------------------------------------------
+// String
+// --------------------------------------------------------------
+@function str-replace($string, $search, $replace) {
+    $index: str-index($string, $search);
+
+    @if not $index {
+      @return $string;
+    }
+
+    $before: str-slice($string, 1, $index - 1);
+    $after: str-slice($string, $index + str-length($search));
+
+    @return str-replace(#{$before + $replace + $after}, $search, $replace);
+}
+
+// --------------------------------------------------------------
+// Map
+// --------------------------------------------------------------
+@function mapAdd($map, $key, $value) {
+    @if map-has-key($map, $key) {
+        $get: map-get($map, $key);
+        $get: append($get, $value);
+        $merge: map-merge($map, ($key: $get));
+        @return $merge;
+    }
+
+    $merge: map-merge($map, ($key: $value));
+    @return $merge;
+}
+
+@function mapPlus($map, $key, $value) {
+    @if map-has-key($map, $key) {
+        $get: map-get($map, $key);
+        $get: $get + 1;
+        $merge: map-merge($map, ($key: $get));
+        @return $merge;
+    }
+
+    $merge: map-merge($map, ($key: $value));
+    @return $merge;
+}
+
+@function mapIsUnique($maps, $key, $value, $isReturnNumber: false) {
+    $i: 0;
+    $continue-loop: true;
+    $map: map-get($maps, $key);
+    $length: length($map);
+    @if $length > 0 {
+        @while $continue-loop {
+            $i: $i + 1;
+            @if $i > $length {
+                $continue-loop: false; // stop while
+            } @else {
+                @if nth($list: $map, $n: $i) == $value {
+                    @if $isReturnNumber {
+                        @return $i;
+                    }
+                    @return false;
+                }
+            }
+        }
+    }
+    @if $isReturnNumber {
+        @return 0;
+    }
+    @return true;
+}
+
+@function mapHasValue($maps, $key, $val, $warning: false) {
+    @if map-has-key($maps, $key) {
+        @if index(map-get($maps, $key), $val) {
+            @return true;
+        }
+        @warn "value " + $val + " not define";
+    } @else {
+        @warn "key " + $key + " not define";
+    }
+    @return false;
+}
+
+// --------------------------------------------------------------
+// Size Responsive
+// --------------------------------------------------------------
+@function _getSize() {
+    $width: map-get(config.getBreakpoint(), config.getBreakpointBaseChace(), size, width);
+    $height: map-get(config.getBreakpoint(), config.getBreakpointBaseChace(), size, height);
+
+    $size: (
+        'width': $width,
+        'height': $height,
+    );
+    @return $size;
+}
+
+@function _pxToEm($value, $width, $height, $base) {
+    @if unit($value) != px {
+        @return $value;
+    }
+    @if unit($base) != px {
+        @error "base must be px";
+    }
+    $size: $height;
+    @if $width < $height {
+        $size: $width;
+    }
+    $value: math.div($value, 1px);
+    $base: math.div($base, 1px);
+
+    @if $base > 0 {
+        $value: math.div($value, $base) * 1em;
+        @return $value;
+    }
+    $value: math.div($value, math.div($size, 100)) * 1em; // $value / ($size / 100) * 1em;
+    @return $value;
+}
+
+@function pxToEm($value, $base: 0px) {
+    $width: map-get(config.getBreakpoint(), config.getBreakpointBaseChace(), size, width);
+    $height: map-get(config.getBreakpoint(), config.getBreakpointBaseChace(), size, height);
+    @return _pxToEm($value, $width, $height, $base);
+}
+
+@function isNumber($value, $with_error: false) {
+    @if type-of($value) == number {
+        @return true;
+    }
+    @if $with_error {
+        @error "value must be number";
+    }
+    @return false;
+}
+@function toPx($value, $withUnit: true) {
+    @if isNumber($value, true) {} // with error
+    $size: _getSize();
+    $width: map-get($size, 'width');
+    $height: map-get($size, 'height');
+    //@debug "width #{$width}, height: #{$height}";
+    @if unit($value) == px {
+        $value: math.div($value, 1px);
+    }
+    @else if unit($value) == vw {
+        $value: math.div($value, 1vw);
+        $value: math.div($width, 100) * $value;
+    }
+    @else if unit($value) == vh {
+        $value: math.div($value, 1vh);
+        $value: math.div($height, 100) * $value;
+    }
+    @else if unit($value) == vmin {
+        $value: math.div($value, 1vmin);
+        $size: $width;
+        @if $width > $height {
+            $size: $height;
+        }
+        $value: math.div($size, 100) * $value;
+    }
+    @else if unit($value) == vmax {
+        $value: math.div($value, 1vmax);
+        $size: $width;
+        @if $width < $height {
+            $size: $height;
+        }
+        $value: math.div($size, 100) * $value;
+    }
+    @else {
+        @error "unit type #{unit($value)} not support";
+    }
+
+    @if $withUnit { $value: $value * 1px; }
+    @return $value;
+}
+
+@function toVw($value) {
+    $value: toPx($value, false);
+    $size: _getSize();
+    $width: map-get($size, 'width');
+    @return math.div($value, math.div($width, 100)) * 1vw;
+}
+@function toVh($value) {
+    $value: toPx($value, false);
+    $size: _getSize();
+    $height: map-get($size, 'height');
+    @return math.div($value, math.div($height, 100)) * 1vh;
+}
+@function toVmin($value) {
+    $value: toPx($value, false);
+    $size: _getSize();
+    $width: map-get($size, 'width');
+    $height: map-get($size, 'height');
+    $size: $width;
+    @if $width > $height {
+        $size: $height;
+    }
+    @return math.div($value, math.div($size, 100)) * 1vmin;
+}
+@function toVmax($value) {
+    $value: toPx($value, false);
+    $size: _getSize();
+    $width: map-get($size, 'width');
+    $height: map-get($size, 'height');
+    $size: $width;
+    @if $width < $height {
+        $size: $height;
+    }
+    @return math.div($value, math.div($size, 100)) * 1vmax;
+}
+// @function toEm($value, $base: 0px) {
+//     $value: toPx($value);
+//     @return pxToEm($value, $base);
+// }
+
+// --------------------------------------------------------------
+// Media Queri
+// --------------------------------------------------------------
+@function generetMedia($type_media) {
+    $breakpoint: map-get(config.getBreakpoint(), $type_media, media);
+    $media: "";
+    $i: 0;
+    @each $key in map-keys($breakpoint) {
+        $i:  $i + 1;
+        $val: map-get($breakpoint, $key);
+
+        @if $i > 1 {
+            $media: $media + " and ";
+        }
+        $media: $media + "(#{$key}: #{$val})";
+    }
+    @return $media;
+}
+
+// --------------------------------------------------------------
+//
+// --------------------------------------------------------------
+
+// --------------------------------------------------------------
+//
+// --------------------------------------------------------------
+
+// --------------------------------------------------------------
+//
+// --------------------------------------------------------------

@@ -1,5 +1,6 @@
 @use "../utilities/functions.scss" as func;
 @import "../utilities/mixins.scss";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:wght@500&family=Poppins&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap');
 
 .font {
   color: white;
@@ -7,4 +8,191 @@
   @include mobileStyles {
     color: red;
   }
+}
+
+.outer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+
+  .content-container {
+    border: solid 3px white;
+    background-color: rgba(255,255,255, 0.4);
+    width: 95.7%;
+    height: 94%;
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: row;
+
+    .side-bar {
+      width: 17%;
+      display: flex;
+      flex-direction: column;
+      padding: 1%;
+      align-items: center;
+
+      .logo {
+        aspect-ratio: 313/ 140;
+        margin-top: 3%;
+        width: 93%;
+        height: unset;
+        background: url("../assets/dashboard/pc_logo_long_2.webp" ) center/cover no-repeat;
+      }
+
+      .menu-container{
+        width: 100%;
+        margin-top: 14%;
+        display: flex;
+        flex-direction: column;
+        gap: 8%;
+        height: 20%;
+
+        .icon {
+          margin-top: 2%;
+        }
+        .menu {
+          font-size: func.toEm(15);
+        }
+        .dash-menu:hover {
+          border: solid 1px rgba(36,139,150,1);
+        }
+        .dash-menu{
+          height: 45%;
+          gap: 7%;
+          color: rgba(36,139,150,1);
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          border-radius: 15px;
+          padding-inline: 8%;
+        }
+        .dash-menu.selected-menu {
+          border: none;
+          height: 45%;
+          color: white;
+          gap: 7%;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          background: radial-gradient(circle, rgba(125,167,171,1) 0%, rgba(36,139,150,1) 68%);
+          border-radius: 15px;
+          padding-inline: 8%;
+        }
+      }
+
+    }
+
+    .separator {
+      place-self: center;
+      flex-shrink: 0;
+      height: 93%;
+      width: 1.3px;
+      background-color: rgb(172, 205, 192);
+    }
+
+    .main-part {
+      display: flex;
+      flex-direction: column;
+      padding: 2%;
+      width: 77%;
+      position: relative;
+
+      .top-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 1%;
+
+        .welcome-text {
+          color: rgba(36,139,150,1);
+          font-size: func.toEm(17);
+          font-weight: 500;
+        }
+
+        .account-container {
+          .profpic {
+
+          }
+          .fullname {
+
+          }
+        }
+
+      }
+
+      .title-page {
+        color: #052208;
+        font-size: func.toEm(44);
+        font-weight: bolder;
+      }
+
+      .main-content {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        margin-top: 1%;
+        gap: 1.2%;
+        
+        .left-container {
+          flex: 1;
+          gap: 3%;
+          display: flex;
+          flex-direction: column;
+
+          .total-data {
+            background-color: #dae9ea;
+            width: 100%;
+            border-radius: 15px;
+            height: 27%;
+            border: solid 1.7px #f2f7f8;
+          }
+          .data-table {
+            width: 100%;
+            height: 70%;
+            border-radius: 15px;
+            background-color: #dae9ea;
+            border: solid 1.7px #f2f7f8;
+          }
+        }
+
+        .right-container {
+          flex:1;
+          display: flex;
+          flex-direction: column;
+          gap: 2%;
+
+          .stat {
+            width: 100%;
+            height: 23.5%;
+            background-color: #dae9ea;
+            border: solid 1.7px #f2f7f8;
+            border-radius: 15px;
+          }
+
+          .stat-style {
+  
+          }
+          .stat-sub-space {
+  
+          }
+          .stat-furni-type {
+  
+          }
+          .main-material {
+  
+          }
+        }
+      }
+
+    }
+
+  }
+
 }
