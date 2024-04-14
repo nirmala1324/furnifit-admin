@@ -4,24 +4,24 @@ import axios from "axios";
 
 const DashboardPage = () => {
   // VARIABLES
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
 
   // Calling API GET data from Database
-  const getUsers = async () => {
-    try {
-      const response = await axios.get("http://localhost:3001/getUsers");
-      return response.data;
-    } catch (error) {
-      console.log("Error fetching users: ", error);
-    }
-  };
+  // const getUsers = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:3001/getUsers");
+  //     return response.data;
+  //   } catch (error) {
+  //     console.log("Error fetching users: ", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    getUsers().then((users) => {
-      console.log(users);
-      setUsers(users);
-    }).catch((err) => console.error("Error in getUsers: ", err))
-  }, [])
+  // useEffect(() => {
+  //   getUsers().then((users) => {
+  //     console.log(users);
+  //     setUsers(users);
+  //   }).catch((err) => console.error("Error in getUsers: ", err))
+  // }, [])
 
   // HTML
   return (
@@ -35,6 +35,8 @@ const DashboardPage = () => {
         );
       })}
       <h3>Hello</h3> */}
+      <div className="side-bar"></div>
+      <div className="main-part"></div>
     </div>
   );
 };
