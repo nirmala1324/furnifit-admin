@@ -1,6 +1,9 @@
+require('dotenv').config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const cloudinary = require("./utilities/dbcloudinary")
 
 // Export Models
 const UserModel = require("./models/Users");
@@ -90,20 +93,6 @@ app.get("/checkFurnitureID/:furnitureID", async (req, res) => {
   }
 });
 
-// API Add Data form from Client Side
-app.post("/addFurniData", async (req, res) => {
-  const furniture = req.body;                           // Getting the data passed from client side
-  const formFurniture = new FurnitureModel(furniture);  // Recreating the model and inject the data inside it
-  
-  try {
-    await formFurniture.save();      // Save the form data to database
-    res.status(200).json({ status: "success", message: "Saving data successfully" });
-  } catch (err) {
-    console.error("Error creating furniture data: ", err);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
 // API Deleting from certain furniture_id of a row data
 app.delete("/deleteFurniture/:furnitureID", async (req, res) => {
   const { furnitureID } = req.params;
@@ -121,6 +110,64 @@ app.delete("/deleteFurniture/:furnitureID", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+// API Add Data form from Client Side
+app.post("/addFurniData", async (req, res) => {
+  const furniture = req.body;                           // Getting the data passed from client side
+  const formFurniture = new FurnitureModel(furniture);  // Recreating the model and inject the data inside it
+  
+  try {
+    await formFurniture.save();      // Save the form data to database
+    res.status(200).json({ status: "success", message: "Saving data successfully" });
+  } catch (err) {
+    console.error("Error creating furniture data: ", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.post("/addFurni", async (req, res, next) => {
+  const { 
+    furni_id, 
+    furni_name, 
+    space_cat, 
+    sub_space_cat, 
+    detail_material, 
+    furni_desc,
+    furni_dimension, 
+    furni_picture, 
+    furni_type, 
+    furni_style, 
+    material_tag, 
+    vectary_link } = req.body;
+
+  try {
+    const result = await cloudinary.uploader.upload(furni_picture, {
+      folder: "furnitures"
+    })
+    const furnitures = await FurnitureModel.create({
+      furni_id, 
+      furni_name, 
+      space_cat, 
+      sub_space_cat, 
+      detail_material, 
+      furni_desc,
+      furni_dimension, 
+      furni_picture: {
+        public_id: result.public_id,
+        url: result.secure_url
+      },
+      furni_type, 
+      furni_style, 
+      material_tag, 
+      vectary_link
+    });
+    res.status(200).json({ status: "success", message: "Saving data successfully", furnitures });
+  } catch (error) {
+    console.error("Error creating furniture data: ", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+)
 
 app.listen(3001, () => {
   console.log("Server is running");

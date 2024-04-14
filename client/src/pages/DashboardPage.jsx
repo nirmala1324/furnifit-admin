@@ -26,7 +26,7 @@ const DashboardPage = () => {
   // HTML
   return (
     <div className="content-container">
-      {users.map((user, index) => {
+      {/* {users.map((user, index) => {
         return (
           <div key={index}>
             <h3>{user.name}</h3>
@@ -34,7 +34,7 @@ const DashboardPage = () => {
           </div>
         );
       })}
-      <h3>Hello</h3>
+      <h3>Hello</h3> */}
     </div>
   );
 };
