@@ -60,7 +60,7 @@
           font-size: func.toEm(15);
         }
         .dash-menu:hover {
-          border: solid 1px rgba(36,139,150,1);
+          border-color: rgba(36, 139, 150, 1);
         }
         .dash-menu{
           height: 45%;
@@ -71,6 +71,8 @@
           align-items: center;
           border-radius: 15px;
           padding-inline: 8%;
+          border: solid 1px transparent; /* Set initial border color */
+          transition: border .2s ease; /* Apply transition to the border property */
         }
         .dash-menu.selected-menu {
           border: none;
@@ -138,10 +140,10 @@
         flex-direction: row;
         height: 100%;
         margin-top: 1%;
-        gap: 1.2%;
+        gap: 1.4%;
         
         .left-container {
-          flex: 1;
+          width: 57%;
           gap: 3%;
           display: flex;
           flex-direction: column;
@@ -152,6 +154,7 @@
             border-radius: 15px;
             height: 27%;
             border: solid 1.7px #f2f7f8;
+            box-shadow: 0 4px 11px rgba(0,0,0,.382);
           }
           .data-table {
             width: 100%;
@@ -159,21 +162,68 @@
             border-radius: 15px;
             background-color: #dae9ea;
             border: solid 1.7px #f2f7f8;
+            box-shadow: 0 4px 11px rgba(0,0,0,.382);
           }
         }
 
         .right-container {
-          flex:1;
+          width: 40%;
           display: flex;
           flex-direction: column;
           gap: 2%;
+          box-shadow: 0 4px 11px rgba(0, 0, 0, 0.382);
+          border-radius: 15px;
 
           .stat {
             width: 100%;
             height: 23.5%;
             background-color: #dae9ea;
             border: solid 1.7px #f2f7f8;
+
+          }
+
+          .swiper {
+            width: 100%;
+            height: 100%;
+          }
+          
+          .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: transparent;
+          
+            /* Center slide text vertically */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             border-radius: 15px;
+
+            .card-stat {
+              width: 100%;
+              height: 99%;
+              background-color: #dae9ea;
+              border: solid 1.7px #f2f7f8;
+              border-radius: 15px;
+
+              
+            .stat-subtitle {
+              font-size: func.toEm(18);
+              margin-top: 12%;
+            }
+
+            .stat-title {
+              font-size: func.toEm(30);
+              font-weight: 600;
+              margin-bottom: 11%;
+            }
+            }
+          }
+          
+          .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
           }
 
           .stat-style {

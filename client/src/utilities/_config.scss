@@ -1,0 +1,165 @@
+// --------------------------------------------------------------
+// Comments
+// menampilkan comentar di css
+// modules/mixins/mixins
+// @include mixin.comments(comentar);
+// --------------------------------------------------------------
+$comments: false;
+
+// --------------------------------------------------------------
+// Assets => functions/assets
+// --------------------------------------------------------------
+$assets_debug: false;
+$assets_with_variable: false;
+$assets_add_folder_name_base_dpr: false;
+$assets_base_dpr: 1;
+$assets_base_url: "/newfileadmin/usp/zero-30-4g/assets/";
+$assets_preload_variable_name: "base-assets-preload";
+$assets_css_selector_name: ".section";
+
+$assets_preload_variable_name_identifier: $assets_preload_variable_name;
+@mixin setAssetPreloadVariableNameIdentifier($name) {
+    $assets_preload_variable_name_identifier: $assets_preload_variable_name + "-" + $name !global;
+}
+@mixin setAssetBaseUrl($path) {
+    $assets_base_url: $path !global;
+}
+// --------------------------------------------------------------
+// Breakpoint
+// --------------------------------------------------------------
+// Desktop
+// 5:4	    16:12.8			        1.25                1280x1024   #
+// 4:3	    16:12			        1,333333333333333   1024x768    #
+// 3:2	    16:10.666666666666666	1.5                 1440×960
+// 8:5	    16:10			        1.6                 1920x1200   #
+// 5:3	    16:9,6			        1,666666666666667   1280×768
+// 16:9	    16:9			        1,777777777777778   1920x1080   #
+// 17:9	    16:8.48			        1,888888888888889   2048×1080
+
+// base => no media query => root, order 1
+$breakpoint_base: pc;
+
+// set breakpoint with order
+// pointer: coarse(mobile), fine(desktop)
+// orientation: portrait(w < h), landscape(w > h)
+$breakpoint: (
+    pc: (
+        size: (
+            width: 1920,
+            height: 1080,
+        ),
+        media: (
+            min-width: 721px,
+        ),
+    ),
+    mb: (
+        size: (
+            width: 720,
+            height: 1280,
+        ),
+        media: (
+            max-width: 720px,
+            //orientation: portrait,
+            //hover: none,
+            //pointer: coarse
+        ),
+    ),
+    mb_only: (
+        size: (
+            width: 720,
+            height: 1280,
+        ),
+        media: (
+            max-width: 720px,
+        ),
+    ),
+    pc_only: (
+        size: (
+            width: 1920,
+            height: 1080,
+        ),
+        media: (
+            min-width: 1920px,
+            orientation: landscape,
+        ),
+    ),
+);
+// ini belum di set jadi tidak ada fungsi apapun
+$breakpointFollow: (
+    pc: (
+        max-width: 1920px,
+        max-height: 1080px
+    )
+);
+
+
+@function getBreakpoint() {
+    @return $breakpoint;
+}
+
+@function getBreakpointBase() {
+    @return $breakpoint_base;
+}
+@function getBreakpointOrder() {
+    $order: getBreakpointBase();
+    @each $typeMedia in map-keys(getBreakpoint()) {
+        @if $typeMedia != getBreakpointBase() {
+            $order: append($order, $typeMedia);
+        }
+    }
+    @return $order;
+}
+$breakpoint_base_chace: getBreakpointBase();
+
+@function breakpointIsRoot($type_media) {
+    @if getBreakpointBase() == $type_media {
+        @return true;
+    }
+    @return false;
+}
+@function getBreakpointBaseChace() {
+    @return $breakpoint_base_chace;
+}
+@function setBreakpointBaseChace($type_media) {
+    @if map-has-key(getBreakpoint(), $type_media) {
+        $breakpoint_base_chace: $type_media !global;
+        @return not breakpointIsRoot($type_media);
+    }
+    @error "function => media " + $type_media + " not define";
+    @return false;
+}
+@mixin setBreakpointBaseChace($key) {
+    @if map-has-key($breakpoint , $key) {
+        $breakpoint_base_chace: $key !global;
+    } @else {
+        @debug "mixin    => media " + $key + " not define";
+    }
+}
+@mixin resetBreakpointBaseChace() {
+    $breakpoint_base_chace: getBreakpointBase() !global;
+}
+
+// --------------------------------------------------------------
+// Grouping
+//
+// malakukan grouping pada css selector
+// merubah nilai number menjadi nilai responsive
+// --------------------------------------------------------------
+$grouping: false
+
+// --------------------------------------------------------------
+//
+// --------------------------------------------------------------
+
+// --------------------------------------------------------------
+//
+// --------------------------------------------------------------
+
+// --------------------------------------------------------------
+//
+// --------------------------------------------------------------
+
+// --------------------------------------------------------------
+//
+// --------------------------------------------------------------
+

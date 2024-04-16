@@ -8,8 +8,8 @@
 $browser-context: 16; // Default
 
 @function toEm($pixels, $context: $browser-context) {
-  @return #{$pixels/$context}em;
-}
+    @return math.div($pixels, $context) * 1em;
+  }
 
 // --------------------------------------------------------------
 // String
