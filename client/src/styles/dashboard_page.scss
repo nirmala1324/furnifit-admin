@@ -1,6 +1,7 @@
 @use "../utilities/functions.scss" as func;
 @import "../utilities/mixins.scss";
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:wght@500&family=Poppins&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:wght@500&family=Poppins&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap");
+
 
 .font {
   color: white;
@@ -22,7 +23,7 @@
 
   .content-container {
     border: solid 3px white;
-    background-color: rgba(255,255,255, 0.4);
+    background-color: rgba(255, 255, 255, 0.4);
     width: 95.7%;
     height: 94%;
     border-radius: 15px;
@@ -42,10 +43,11 @@
         margin-top: 3%;
         width: 93%;
         height: unset;
-        background: url("../assets/dashboard/pc_logo_long_2.webp" ) center/cover no-repeat;
+        background: url("../assets/dashboard/pc_logo_long_2.webp") center/cover
+          no-repeat;
       }
 
-      .menu-container{
+      .menu-container {
         width: 100%;
         margin-top: 14%;
         display: flex;
@@ -62,17 +64,18 @@
         .dash-menu:hover {
           border-color: rgba(36, 139, 150, 1);
         }
-        .dash-menu{
+        .dash-menu {
+          cursor: pointer;
           height: 45%;
           gap: 7%;
-          color: rgba(36,139,150,1);
+          color: rgba(36, 139, 150, 1);
           display: flex;
           flex-direction: row;
           align-items: center;
           border-radius: 15px;
           padding-inline: 8%;
           border: solid 1px transparent; /* Set initial border color */
-          transition: border .2s ease; /* Apply transition to the border property */
+          transition: border 0.2s ease; /* Apply transition to the border property */
         }
         .dash-menu.selected-menu {
           border: none;
@@ -82,12 +85,15 @@
           display: flex;
           flex-direction: row;
           align-items: center;
-          background: radial-gradient(circle, rgba(125,167,171,1) 0%, rgba(36,139,150,1) 68%);
+          background: radial-gradient(
+            circle,
+            rgba(125, 167, 171, 1) 0%,
+            rgba(36, 139, 150, 1) 68%
+          );
           border-radius: 15px;
           padding-inline: 8%;
         }
       }
-
     }
 
     .separator {
@@ -111,22 +117,30 @@
         justify-content: space-between;
         width: 100%;
         margin-top: 1%;
+        align-items: center;
 
         .welcome-text {
-          color: rgba(36,139,150,1);
+          color: rgba(36, 139, 150, 1);
           font-size: func.toEm(17);
           font-weight: 500;
         }
 
         .account-container {
+          padding-right: 1%;
+          width: 12%;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
           .profpic {
-
+            border-radius: 50%;
+            width: func.toEm(30);
+            height: func.toEm(30);
+            background-color: red;
           }
           .fullname {
-
           }
         }
-
       }
 
       .title-page {
@@ -141,7 +155,7 @@
         height: 100%;
         margin-top: 1%;
         gap: 1.4%;
-        
+
         .left-container {
           width: 57%;
           gap: 3%;
@@ -154,7 +168,28 @@
             border-radius: 15px;
             height: 27%;
             border: solid 1.7px #f2f7f8;
-            box-shadow: 0 4px 11px rgba(0,0,0,.382);
+            box-shadow: 0 4px 11px rgba(0, 0, 0, 0.382);
+
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+
+            .big-text {
+              font-weight: 600;
+              font-size: 20px;
+            }
+
+            .divider {
+              width: 0.7px;
+              height: 63%;
+              background-color: black;
+            }
+
+            .total {
+              font-size: func.toEm(30);
+              font-weight: 600;
+              color: rgb(36, 139, 150);
+            }
           }
           .data-table {
             width: 100%;
@@ -162,12 +197,42 @@
             border-radius: 15px;
             background-color: #dae9ea;
             border: solid 1.7px #f2f7f8;
-            box-shadow: 0 4px 11px rgba(0,0,0,.382);
+            box-shadow: 0 4px 11px rgba(0, 0, 0, 0.382);
+
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+
+            .header {
+              justify-content: space-between;
+              align-items: center;
+              height: 11%;
+              width: 95%;
+              display: flex;
+              flex-direction: row;
+
+              .title {
+                font-weight: 600;
+              }
+
+              .view-all {
+                color: rgb(36, 139, 150);
+                font-size: 0.98em;
+              }
+            }
+
+            .dataTable {
+              overflow: hidden;
+              border-radius: 15px;
+              height: 85%;
+              width: 97%;
+            }
           }
         }
 
         .right-container {
-          width: 40%;
+          width: 42%;
           display: flex;
           flex-direction: column;
           gap: 2%;
@@ -179,24 +244,28 @@
             height: 23.5%;
             background-color: #dae9ea;
             border: solid 1.7px #f2f7f8;
-
           }
 
           .swiper {
             width: 100%;
             height: 100%;
           }
-          
+
           .swiper-slide {
             text-align: center;
             font-size: 18px;
             background: transparent;
-          
+
             /* Center slide text vertically */
             display: flex;
             justify-content: center;
             align-items: center;
             border-radius: 15px;
+
+            .mySwiper {
+              color: #fff;
+              background: #7fb3bf;
+            }
 
             .card-stat {
               width: 100%;
@@ -205,20 +274,38 @@
               border: solid 1.7px #f2f7f8;
               border-radius: 15px;
 
-              
-            .stat-subtitle {
-              font-size: func.toEm(18);
-              margin-top: 12%;
-            }
+              .stat-subtitle {
+                font-size: func.toEm(18);
+                margin-top: 7%;
+                font-weight: 600;
+              }
 
-            .stat-title {
-              font-size: func.toEm(30);
-              font-weight: 600;
-              margin-bottom: 11%;
-            }
+              .boundary {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                gap: 2%;
+                margin-bottom: 7%;
+                .line {
+                  height: func.toEm(0.7);
+                  width: 30%;
+                  background-color: black;
+                }
+                .text {
+                  font-size: func.toEm(16);
+                }
+              }
+
+              .stat-title {
+                font-size: func.toEm(30);
+                font-weight: 600;
+                margin-bottom: 10%;
+                color: rgba(36, 139, 150, 0.705);
+              }
             }
           }
-          
+
           .swiper-slide img {
             display: block;
             width: 100%;
@@ -227,22 +314,15 @@
           }
 
           .stat-style {
-  
           }
           .stat-sub-space {
-  
           }
           .stat-furni-type {
-  
           }
           .main-material {
-  
           }
         }
       }
-
     }
-
   }
-
 }
