@@ -2,23 +2,47 @@ import { useEffect, useState } from "react";
 import "../styles/furni_data_page.scss";
 import axios from "axios";
 
+import {
+  createTheme,
+  ThemeProvider,
+  alpha,
+  getContrastRatio,
+} from "@mui/material/styles";
+
 // ROUTING
 import { useNavigate } from "react-router-dom";
 
 // DATA GRID
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid } from "@mui/x-data-grid";
 
 // Importing icons and components
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import ListAltRoundedIcon from "@mui/icons-material/ListAltRounded";
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
+import Button from "@mui/material/Button";
+import AddIcon from "@mui/icons-material/Add";
 
+
+const violetBase = "#248b96";
+
+const theme = createTheme({
+  palette: {
+    violet: {
+      main: violetBase,
+      light: alpha(violetBase, 0.5),
+      dark: alpha(violetBase, 0.9),
+      contrastText:
+        getContrastRatio(violetMain, "#fff") > 3 ? "#fff" : "#111",
+    },
+  },
+});
 
 const FurniDataPage = () => {
-  const navigate = useNavigate() // Goes to homepage
+
+  const navigate = useNavigate(); // Goes to homepage
 
   return (
+    
+    <ThemeProvider theme={theme}>
     <div className="outer-container">
       <div className="content-container">
         {/* {users.map((user, index) => {
@@ -33,7 +57,7 @@ const FurniDataPage = () => {
         <div className="side-bar">
           <div className="logo"></div>
           <div className="menu-container">
-            <div className="dash-menu" onClick={() => navigate('/')} >
+            <div className="dash-menu" onClick={() => navigate("/")}>
               <div className="icon">
                 <DashboardRoundedIcon sx={{ fontSize: 30 }} />
               </div>
@@ -61,13 +85,21 @@ const FurniDataPage = () => {
             <div className="table-container">
               <div className="header">
                 <div className="table-title">Furnitures</div>
-                <Button variant="contained"><AddIcon/> Add New Data</Button>
+                <div className="button-div">
+                  <Button color="violet" variant="contained">
+                    <AddIcon /> Add New Data
+                  </Button>
+                </div>
               </div>
               <div className="dataTable">
-              <DataGrid
-                  columns={[{ field: 'ID' }, { field: 'First name' }, { field: 'Last name' }]}
+                <DataGrid
+                  columns={[
+                    { field: "ID" },
+                    { field: "First name" },
+                    { field: "Last name" },
+                  ]}
                   rows={[]}
-                  sx={{ '--DataGrid-overlayHeight': '300px' }}
+                  sx={{ "--DataGrid-overlayHeight": "300px" }}
                 />
               </div>
             </div>
@@ -75,6 +107,7 @@ const FurniDataPage = () => {
         </div>
       </div>
     </div>
+    </ThemeProvider>
   );
 };
 

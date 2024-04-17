@@ -159,6 +159,16 @@
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
+
+                .table-title {
+
+                }
+
+                .button-div {
+                  overflow: hidden;
+                  border-radius: 15px;
+                  background-color: red;
+                }
             }
 
             .dataTable {
