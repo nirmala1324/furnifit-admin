@@ -78,6 +78,7 @@ app.get("/getFurniData", async (req, res) => {    // req = data passing from fro
 // API Check Input FurnitureID Existance
 app.get("/checkFurnitureID/:furnitureID", async (req, res) => {
   const { furnitureID } = req.params;
+  console.log(furnitureID)
 
   try {
     const existingFurniture = await FurnitureModel.findOne({ furni_id: furnitureID });
@@ -111,6 +112,17 @@ app.delete("/deleteFurniture/:furnitureID", async (req, res) => {
   }
 });
 
+app.post('/check-furniture-id', async (req, res) => {
+  try {
+    const { furni_id } = req.body;
+    const existingFurniture = await FurnitureModel.findOne({ furni_id });
+    res.json({ available: !existingFurniture });
+  } catch (error) {
+    console.error('Error checking furniture ID:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 // API Add Data form from Client Side
 app.post("/addFurniData", async (req, res) => {
   const furniture = req.body;                           // Getting the data passed from client side
@@ -125,6 +137,41 @@ app.post("/addFurniData", async (req, res) => {
   }
 });
 
+app.post("/submit-form", async (req, res ) => {
+  // Extracting data from the POST request body
+  const { furni_id, furni_name, space_cat, sub_space_cat, detail_material, furni_desc, furni_dimension, furni_picture, furni_type, furni_style, material_tag, vectary_link } = req.body;
+
+  try {
+    // Add the image to Cloudinary and get response
+    const result = await cloudinary.uploader.upload(furni_picture, {folder: "furnitures"}) 
+
+    // Create new furniture document/ model/ schema
+    const newFurnitures = await FurnitureModel.create({
+      furni_id, 
+      furni_name, 
+      space_cat, 
+      sub_space_cat, 
+      detail_material, 
+      furni_desc,
+      furni_dimension, 
+      furni_picture: {
+        public_id: result.public_id,
+        url: result.secure_url
+      },
+      furni_type, 
+      furni_style, 
+      material_tag, 
+      vectary_link
+    });
+    res.status(200).json({ status: "success", message: "Saving data successfully", newFurnitures });
+  } catch (err){
+    console.error("Error creating furniture data: ", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+})
+
+
+// ROUTE | Handle Furniture data submission to database
 app.post("/addFurni", async (req, res, next) => {
   const { 
     furni_id, 

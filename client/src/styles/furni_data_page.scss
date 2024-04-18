@@ -3,6 +3,75 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:wght@500&family=Poppins&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap");
 
 
+.outer-container#blur.active {
+  filter: blur(15px);
+  transition: ease-in .1s;
+  pointer-events: none;
+  user-select: none;
+}
+
+#modal {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  padding: 2.5%;
+  box-shadow: 0 5px 30px rgba(0,0,0,.30);
+  background-color: white;
+  border-radius: 15px;
+
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.5s;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .form-container {
+      width: 100%;
+      display: flex;
+      gap: 1%;
+      margin-top: 2%;
+
+      .left-container {
+        width: 49.5%;
+
+        .check-container {
+          display: flex;
+          flex-direction: column;
+
+          .upper-part {
+            display: flex;
+            flex-direction: row;
+          }
+
+          .lower-part {
+            p {
+              font-size: func.toEm(14);
+              color: red;
+              margin: 1% 0;
+            }
+          }
+        }
+      }
+
+      .right-container {
+        width: 49.5%;
+      }
+    }
+  }
+}
+
+#modal.active {
+  top: 50%;
+  visibility: visible;
+  opacity: 1;
+  transition: 0.5s;
+}
+
 .outer-container {
   display: flex;
   justify-content: center;
