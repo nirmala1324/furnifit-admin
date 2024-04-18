@@ -25,10 +25,29 @@
   opacity: 0;
   transition: 0.5s;
 
+  .close-button {
+    margin-right: 2.3vw;
+    right: 0;
+    position: absolute;
+    border-radius: 50%;
+    width: 43px;
+    height: 44px;
+    background-color: slategrey;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   form {
     display: flex;
     flex-direction: column;
     width: 100%;
+
+    .title-modal {
+      font-size: func.toEm(29);
+      font-weight: 600;
+    }
 
     .form-container {
       width: 100%;
@@ -60,6 +79,8 @@
 
       .right-container {
         width: 49.5%;
+
+
       }
     }
   }
