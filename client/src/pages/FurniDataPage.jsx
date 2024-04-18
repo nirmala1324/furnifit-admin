@@ -49,7 +49,7 @@ const theme = createTheme({
 const FurniDataPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isFurniIdAvailable, setIsFurniIdAvailable] = useState(false);
+  const [isFurniIdAvailable, setIsFurniIdAvailable] = useState(true);
 
   const [formData, setFormData] = useState({
     furni_id: "",
@@ -69,7 +69,7 @@ const FurniDataPage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setIsFurniIdAvailable(false); // Reset availability check when the ID changes
+    setIsFurniIdAvailable(true); // Reset availability check when the ID changes
   };
 
   const handleSubmit = async (e) => {
@@ -110,10 +110,10 @@ const FurniDataPage = () => {
       console.log(response)
       if (response.data.status === "success" && response.data.message === "already exist") {
         setIsFurniIdAvailable(false);
-        setError('The Furniture ID is already in use. Please select a different one.');
-      } else if (response.data === null) {
+        setError('Furniture ID already exists. Please choose a different one.');
+      } else  {
         setIsFurniIdAvailable(true);
-        setError('The furniture ID is available for use.');
+        setError('');
       } 
       setLoading(false);
     } catch (error) {
@@ -214,9 +214,9 @@ const FurniDataPage = () => {
                     <CircularProgress size={20} style={{ marginLeft: "10px" }} />
                   )}
                   {error && <p style={{ color: "red" }}>{error}</p>}
-                  {isFurniIdAvailable && (
-                    <p style={{ color: "red" }}>
-                      Furniture ID already exists. Please choose a different one.
+                  {!isFurniIdAvailable && (
+                    <p id="div-message" style={{ color: "red" }}>
+                      
                     </p>
                   )}
                 </div>
