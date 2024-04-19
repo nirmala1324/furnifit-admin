@@ -52,11 +52,11 @@
     .form-container {
       width: 100%;
       display: flex;
-      gap: 1%;
+      gap: 2%;
       margin-top: 2%;
 
       .left-container {
-        width: 49.5%;
+        width: 47%;
 
         .check-container {
           display: flex;
@@ -78,9 +78,35 @@
       }
 
       .right-container {
-        width: 49.5%;
+        width: 47%;
+        
+        .furni-dimension-label {
+          color: #6f6e6e;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
 
+          .text {
 
+          }
+
+          .line {
+            height: 0.3px;
+            background-color: #929292;
+            width: 68%;
+          }
+
+          .line2 {
+            height: 0.3px;
+            background-color: #929292;
+            width: 73%;
+          }
+        }
+        .furni-dimension-container {
+          margin-top: 2%;
+          display: flex;
+          gap: 2.2%;
+        }
       }
     }
   }

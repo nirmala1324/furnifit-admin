@@ -26,9 +26,7 @@ import {
   Chip,
   OutlinedInput,
   Box,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
+  InputAdornment,
   CircularProgress,
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
@@ -89,7 +87,7 @@ const FurniDataPage = () => {
     sub_space_cat: "",
     detail_material: "",
     furni_desc: "",
-    furni_dimension: [],
+    furni_dimension: ['', '', ''],
     furni_picture: { public_id: "", url: "" },
     furni_type: "",
     furni_style: "",
@@ -97,11 +95,16 @@ const FurniDataPage = () => {
     vectary_link: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e, index) => {
     const { name, value } = e.target;
-    // If the field being updated is 'material_tag', split the string value by commas
+  if (name === 'furni_dimension') {
+    const updatedDimension = [...formData.furni_dimension];
+    updatedDimension[index] = value;
+    setFormData({ ...formData, furni_dimension: updatedDimension });
+  } else {
     const updatedValue = name === 'material_tag' ? (typeof value === 'string' ? value.split(',') : value) : value;
     setFormData({ ...formData, [name]: updatedValue });
+  }
     setIsFurniIdAvailable(true); // Reset availability check when the ID changes
     console.log(formData)
   };
@@ -121,7 +124,7 @@ const FurniDataPage = () => {
         sub_space_cat: "",
         detail_material: "",
         furni_desc: "",
-        furni_dimension: [],
+        furni_dimension: ['', '', ''],
         furni_picture: { public_id: "", url: "" },
         furni_type: "",
         furni_style: "",
@@ -365,7 +368,7 @@ const FurniDataPage = () => {
                     <MenuItem value={"Industrial"}>Industrial</MenuItem>
                     <MenuItem value={"Scandinavian"}>Scandinavian</MenuItem>
                     <MenuItem value={"Rustic"}>Rustic</MenuItem>
-                    <MenuItem value={"Shabby Chic"}>Side Table</MenuItem>
+                    <MenuItem value={"Shabby Chic"}>Shabby Chic</MenuItem>
                     <MenuItem value={"Mid-Century Modern"}>Mid-Century Modern</MenuItem>
                     <MenuItem value={"Japanese Zen"}>Japanese Zen</MenuItem>
                     <MenuItem value={"Tropical/Natural"}>Tropical/Natural</MenuItem>
@@ -422,13 +425,98 @@ const FurniDataPage = () => {
                   value={formData.detail_material}
                   defaultValue={"Hello There"}
                   multiline
-                  rows={3}
+                  rows={2.6}
                 />
               </div>
             </div>
 
             {/* RIGHT SECTION */}
-            <div className="right-container"></div>
+            <div className="right-container">
+
+              {/* Data Form Submission Part 9 */}
+              <div className="furniture-description">
+                <TextField
+                  sx={{ mb: 1.5 }}
+                  name="furni_desc"
+                  id="outlined-multiline-static"
+                  label="Furniture Description"
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                  value={formData.furni_desc}
+                  multiline
+                  rows={2.6}
+                />
+              </div>
+
+              <div className="furni-dimension-label">
+                <div className="text">Furniture Dimension</div>
+                <div className="line"></div>
+              </div>
+
+              {/* Data Form Submission Part 10 */}
+              <div className="furni-dimension-container">
+                <div className="furni-dimension">
+                  <TextField
+                    name="furni_dimension"
+                    size="small"
+                    required
+                    fullWidth
+                    label="Width"
+                    id="outlined-adornment-weight"
+                    value={formData.furni_dimension[0]}
+                    onChange={(e) => handleChange(e, 0)}
+                    InputProps={{
+                      endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+                    }}
+                  />
+                </div>
+                <div className="furni-dimension">
+                  <TextField
+                    name="furni_dimension"
+                    size="small"
+                    required
+                    fullWidth
+                    label="Depth"
+                    id="outlined-adornment-weight"
+                    value={formData.furni_dimension[1]}
+                    onChange={(e) => handleChange(e, 1)}
+                    InputProps={{
+                      endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+                    }}
+                  />
+                </div>
+                <div className="furni-dimension">
+                  <TextField
+                    name="furni_dimension"
+                    size="small"
+                    required
+                    fullWidth
+                    label="Height"
+                    id="outlined-adornment-weight"
+                    value={formData.furni_dimension[2]}
+                    onChange={(e) => handleChange(e, 2)}
+                    InputProps={{
+                      endAdornment: <InputAdornment position="end">mm</InputAdornment>,
+                    }}
+                  />
+                </div>
+              </div>
+              
+              {/* Data Form Submission Part 11 */}
+              <div className="name-container">
+                <TextField sx={{ mt: 1.5, mb:1.5 }} size="small" label="Vectary Link" name="vectary_link" type="text" value={formData.vectary_link} onChange={handleChange} fullWidth required />
+              </div>
+              
+              <div className="furni-dimension-label">
+                <div className="text">Furniture Picture</div>
+                <div className="line2"></div>
+              </div>
+
+              {/* Data Form Submission Part 12 */}
+              <div className="furni-picture">
+              </div>
+            </div>
           </div>
           <div className="button-submit">
           <Button
