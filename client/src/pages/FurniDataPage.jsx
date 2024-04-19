@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import "../styles/furni_data_page.scss";
 import axios from "axios";
 
-import { TextField, Typography } from "@mui/material";
+// IMPORTING COMPONENTS
+import FileInput from "../components/CropPhotoTrial/FileInput";
+import CustomModal from "../components/CropPhotoTrial/Modal";
+// ROUTING
+import { useNavigate } from "react-router-dom";
+
+
+// IMPORTING MATERIAL UI
+// ================================================================================
 
 import {
   createTheme,
@@ -11,14 +19,8 @@ import {
   getContrastRatio,
 } from "@mui/material/styles";
 
-// ROUTING
-import { useNavigate } from "react-router-dom";
-
-// DATA GRID
-import { DataGrid } from "@mui/x-data-grid";
-
-// Importing icons and components
 import {
+  TextField,
   FormControl,
   InputLabel,
   Select,
@@ -29,11 +31,15 @@ import {
   InputAdornment,
   CircularProgress,
 } from "@mui/material";
+
 import CloseIcon from '@mui/icons-material/Close';
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import ListAltRoundedIcon from "@mui/icons-material/ListAltRounded";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+
+// DATA GRID
+import { DataGrid } from "@mui/x-data-grid";
 
 const violetBase = "#248b96";
 
@@ -48,7 +54,7 @@ const theme = createTheme({
   },
 });
 
-// For Chip
+// For CHIP (Tag MultiSelect) -----------------------------------------------------------------
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -74,8 +80,83 @@ const materials = [
   'Wax',
   'Foam',
 ];
+// ---------------------------------------------------------------------------------
+// =================================================================================
+
+
 
 const FurniDataPage = () => {
+
+  // CROPPER FUNCTIONS
+  // ================================================================================
+
+  const [image, setImage] = useState("");
+  const [imgAfterCrop, setImgAfterCrop] = useState("");
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  // Callback function when an image is selected
+  const onImageSelected = (selectedImg) => {
+    setImage(selectedImg);
+    setIsOpen(true);
+  };
+
+  // Callback function when cropping is done
+  const onCropDone = (imgCroppedArea) => {
+    const canvasWidth = 200;
+    const canvasHeight = 200;
+    // Create canvas element to crop the image
+    const canvasEle = document.createElement("canvas");
+    canvasEle.width = canvasWidth;
+    canvasEle.height = canvasHeight;
+
+    const context = canvasEle.getContext("2d");
+
+    // Load the selected image
+    let imageObj1 = new Image();
+    imageObj1.src = image;
+    imageObj1.onload = function () {
+      // Draw the cropped portion of the image onto teh canvas
+      context.drawImage(
+        imageObj1,
+        imgCroppedArea.x,
+        imgCroppedArea.y,
+        imgCroppedArea.width,
+        imgCroppedArea.height,
+        0,
+        0,
+        canvasWidth,
+        canvasHeight
+      );
+
+      // Convert the canvas content to a data URL (base64)
+      const dataURL = canvasEle.toDataURL();
+
+      setImgAfterCrop(dataURL);
+      setIsOpen(false);
+      console.log(imgAfterCrop);
+
+      // Set the imageURL to input form hidden
+      // Update the input value using React state
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        furni_picture: imgAfterCrop,
+      }));
+    };
+  };
+
+  // Callback function when cropping is done
+  const onCropCancel = () => {
+    setIsOpen(false);
+    setImage("")
+  };
+
+  // =====================================================================================
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isFurniIdAvailable, setIsFurniIdAvailable] = useState(true);
@@ -114,7 +195,7 @@ const FurniDataPage = () => {
     
     if (isFurniIdAvailable) {
     try { 
-      await axios.post("/submit-form", formData);
+      await axios.post("/api/submit-form", formData);
       alert("Furniture data saved successfully");
       // Clear form data after successful submission if needed
       setFormData({
@@ -131,6 +212,9 @@ const FurniDataPage = () => {
         material_tag: [],
         vectary_link: "",
       });
+
+      // Reload page after success
+      window.location.reload()
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("Error submitting form. Please try again later.");
@@ -515,6 +599,29 @@ const FurniDataPage = () => {
 
               {/* Data Form Submission Part 12 */}
               <div className="furni-picture">
+                <div
+                  className="furni-picture-inner-container"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <FileInput onImageSelected={onImageSelected} />
+                  <div className="cropped-container">
+                    <img style={{ borderRadius: "15px" }} src={imgAfterCrop} />
+                    <input id="url-image-input" value={formData.furni_picture} onChange={handleChange} name="furni_pic" />
+                  </div>
+                </div>
+                <CustomModal
+                  onCropDone={onCropDone}
+                  onCropCancel={onCropCancel}
+                  image={image}
+                  isOpen={isOpen}
+                  onClose={closeModal}
+                >
+                  This is the content of the modal.
+                </CustomModal>
               </div>
             </div>
           </div>

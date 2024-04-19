@@ -29,8 +29,7 @@ const CustomModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <div className="cropper">
-        <h2 id="modal-modal-title">Modal</h2>
+      <div className="cropper" style={{ display: "flex" }}>
         <div className="image-cropper-container">
           {/* Image Cropper Component */}
           <Cropper
@@ -49,18 +48,32 @@ const CustomModal = ({
               },
             }}
           />
-        </div>
-
-        <div className="action-buttons">
-          <div className="close-button">
-            <Button variant="primary" size="small" onClick={onCropCancel}>
-              Close
-            </Button>
-          </div>
-          <div className="apply-button">
-            <Button variant="primary" size="small" onClick={() => { onCropDone(croppedArea) }}>
-              Crop & Apply
-            </Button>
+          
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 20%;
+    background-color: white;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+          <div className="action-buttons" style={{justifyContent: "center", alignItems: "center", display: "flex", height: "20%", backgroundColor: "white", width: "100%", position: "absolute", bottom: "0"}}>
+            <div className="close-button">
+              <Button variant="danger" size="small" onClick={onCropCancel}>
+                Close
+              </Button>
+            </div>
+            <div className="apply-button">
+              <Button
+                variant="violet"
+                size="small"
+                onClick={() => {
+                  onCropDone(croppedArea);
+                }}
+              >
+                Crop & Apply
+              </Button>
+            </div>
           </div>
         </div>
       </div>
