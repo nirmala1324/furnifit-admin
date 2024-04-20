@@ -94,57 +94,16 @@ app.get("/checkFurnitureID/:furnitureID", async (req, res) => {
   }
 });
 
-// API Deleting from certain furniture_id of a row data
-app.delete("/deleteFurniture/:furnitureID", async (req, res) => {
-  const { furnitureID } = req.params;
-
-  try {
-    const deletedFurniture = await FurnitureModel.findOneAndDelete({ furni_id: furnitureID });
-
-    if (deletedFurniture) {
-      res.status(200).json({ message: "Furniture deleted successfully" });
-    } else {
-      res.status(404).json({ message: "Furniture not found" });
-    }
-  } catch (error) {
-    console.error("Error deleting furniture:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-app.post('/check-furniture-id', async (req, res) => {
-  try {
-    const { furni_id } = req.body;
-    const existingFurniture = await FurnitureModel.findOne({ furni_id });
-    res.json({ available: !existingFurniture });
-  } catch (error) {
-    console.error('Error checking furniture ID:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
 
 // API Add Data form from Client Side
-app.post("/addFurniData", async (req, res) => {
-  const furniture = req.body;                           // Getting the data passed from client side
-  const formFurniture = new FurnitureModel(furniture);  // Recreating the model and inject the data inside it
-  
-  try {
-    await formFurniture.save();      // Save the form data to database
-    res.status(200).json({ status: "success", message: "Saving data successfully" });
-  } catch (err) {
-    console.error("Error creating furniture data: ", err);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
 app.post("/submit-form", async (req, res ) => {
   // Extracting data from the POST request body
   const { furni_id, furni_name, space_cat, sub_space_cat, detail_material, furni_desc, furni_dimension, furni_picture, furni_type, furni_style, material_tag, vectary_link } = req.body;
-
+  
   try {
     // Add the image to Cloudinary and get response
     const result = await cloudinary.uploader.upload(furni_picture, {folder: "furnitures"}) 
-
+    
     // Create new furniture document/ model/ schema
     const newFurnitures = await FurnitureModel.create({
       furni_id, 
@@ -170,51 +129,23 @@ app.post("/submit-form", async (req, res ) => {
   }
 })
 
-
-// ROUTE | Handle Furniture data submission to database
-app.post("/addFurni", async (req, res, next) => {
-  const { 
-    furni_id, 
-    furni_name, 
-    space_cat, 
-    sub_space_cat, 
-    detail_material, 
-    furni_desc,
-    furni_dimension, 
-    furni_picture, 
-    furni_type, 
-    furni_style, 
-    material_tag, 
-    vectary_link } = req.body;
+// API Deleting from certain furniture_id of a row data
+app.delete("/deleteFurniture/:furnitureID", async (req, res) => {
+  const { furnitureID } = req.params;
 
   try {
-    const result = await cloudinary.uploader.upload(furni_picture, {
-      folder: "furnitures"
-    })
-    const furnitures = await FurnitureModel.create({
-      furni_id, 
-      furni_name, 
-      space_cat, 
-      sub_space_cat, 
-      detail_material, 
-      furni_desc,
-      furni_dimension, 
-      furni_picture: {
-        public_id: result.public_id,
-        url: result.secure_url
-      },
-      furni_type, 
-      furni_style, 
-      material_tag, 
-      vectary_link
-    });
-    res.status(200).json({ status: "success", message: "Saving data successfully", furnitures });
+    const deletedFurniture = await FurnitureModel.findOneAndDelete({ furni_id: furnitureID });
+
+    if (deletedFurniture) {
+      res.status(200).json({ message: "Furniture deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Furniture not found" });
+    }
   } catch (error) {
-    console.error("Error creating furniture data: ", error);
+    console.error("Error deleting furniture:", error);
     res.status(500).json({ message: "Internal server error" });
   }
-}
-)
+});
 
 app.listen(3001, () => {
   console.log("Server is running");

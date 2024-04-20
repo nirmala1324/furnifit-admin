@@ -87,8 +87,97 @@ const materials = [
 
 const FurniDataPage = () => {
 
-  // CROPPER FUNCTIONS
   // ================================================================================
+  // SET DATA TO DATA GRID
+  const [furnitures, setFurnitures] = useState([]);
+
+  const handleAction = (row) => {
+    // Handle action for the specific row here
+    console.log('Action clicked for row:', row);
+  };
+
+  const handleActionDelete = (row) => {
+    // Handle action for the specific row here
+    console.log('Row to delete:', row);
+  };
+
+
+  // Get Data
+  useEffect(() => {
+    axios.get('/api/getFurniData')
+      .then(response => {
+        // Add a unique 'id' property to each row
+        const rowsWithId = response.data.map(row => ({ ...row, id: row.furni_id }));
+        setFurnitures(rowsWithId);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
+  // Set Column
+  const columns = [
+    { field: 'furni_id', headerName: 'ID', width: 90 },
+    { field: 'furni_name', headerName: 'Name', width: 150 },
+    { field: 'space_cat', headerName: 'Space Category', width: 120 },
+    { field: 'sub_space_cat', headerName: 'Sub Space Category', width: 150 },
+    { field: 'furni_style', headerName: 'Style', width: 120 },
+    { field: 'material_tag', headerName: 'Material Tag', width: 150 },
+    { field: 'detail_material', headerName: 'Detail Material', width: 250, 
+    renderCell: (params) => (
+      <TextField
+        sx={{ mt: 1 }}
+        id="outlined-multiline-static"
+        size="small"
+        fullWidth
+        value={params.row.detail_material}
+        multiline
+        rows={4.2}
+      />)},
+    { field: 'furni_desc', headerName: 'Description', width: 300, 
+    renderCell: (params) => (
+      <TextField
+        sx={{ mt: 1 }}
+        id="outlined-multiline-static"
+        size="small"
+        fullWidth
+        value={params.row.furni_desc}
+        multiline
+        rows={4.2}
+      />)},
+    { field: 'furni_dimension', headerName: 'Dimension', width: 150 },
+    { field: 'furni_picture', headerName: 'Picture', width: 150, renderCell: (params) => (<img src={params.row.furni_picture.url} alt="Furniture" style={{ width: '100%' }}/>)},
+    { field: 'furni_type', headerName: 'Type', width: 130 },
+    { field: 'vectary_link', headerName: 'Vectary Link', width: 200, 
+    renderCell: (params) => (
+      <TextField
+        sx={{ mt: 1 }}
+        id="outlined-multiline-static"
+        size="small"
+        fullWidth
+        value={params.row.vectary_link}
+        multiline
+        rows={4.2}
+      />)},
+    {
+      field: 'action',
+      headerName: 'Action',
+      width: 210,
+      renderCell: (params) => (
+        <div style={{display: "flex", gap: "2%", justifyContent:"center", alignItems: "center", height: "100%", width: "100%"}}>
+        <Button variant="contained" color="violet" onClick={() => handleAction(params.row)}>
+          Edit
+        </Button>
+        <Button variant="contained" color="error" onClick={() => handleActionDelete(params.row.furni_id)}>
+          Delete
+        </Button>
+        </div>
+      ),
+    },
+  ];
+  
+  // ================================================================================
+
+  // ================================================================================
+  // CROPPER FUNCTIONS
 
   const [image, setImage] = useState("");
   const [imgAfterCrop, setImgAfterCrop] = useState("");
@@ -302,13 +391,8 @@ const FurniDataPage = () => {
                 </div>
                 <div className="dataTable">
                   <DataGrid
-                    columns={[
-                      { field: "ID" },
-                      { field: "First name" },
-                      { field: "Last name" },
-                    ]}
-                    rows={[]}
-                    sx={{ "--DataGrid-overlayHeight": "300px" }}
+                    rows={furnitures} columns={columns} pageSize={3} checkboxSelection rowHeight={131} 
+                    sx={{ "--DataGrid-overlayHeight": "100px" }}
                   />
                 </div>
               </div>
