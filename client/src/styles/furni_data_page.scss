@@ -260,7 +260,7 @@
       .main-content {
         display: flex;
         flex-direction: row;
-        height: 100%;
+        height: 86%;
         margin-top: 1%;
         gap: 1.4%;
 
@@ -288,8 +288,9 @@
             }
 
             .dataTable {
+                background-color: #dae9ea;
                 width: 100%;
-                height: 76%;
+                height: 86%;
                 overflow: hidden;
                 border-radius: 15px;
             }

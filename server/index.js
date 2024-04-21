@@ -8,7 +8,6 @@ const cloudinary = require("./utilities/dbcloudinary")
 // Export Models
 const UserModel = require("./models/Users");
 const FurnitureModel = require("./models/Furnitures");
-const Trial2Model = require("./models/Trial2");
 
 const app = express();
 app.use(cors());
@@ -17,7 +16,7 @@ app.use(express.json()); // whenever data passed from frontend to backend
                          // it will goes error if not
 
 // Connect to MongoDB
-mongoose.connect("mongodb+srv://nirmalapusparatna20031107:npr20031107@cluster0.cqhgovi.mongodb.net/dbfurnifit")
+mongoose.connect(process.env.VITE_MONGODB_URL)
 
 const db = mongoose.connection;
 
@@ -29,37 +28,15 @@ db.once('open', () => {
 
 // TRIAL API BJIR -------------------------------------------------------------------------------------
 
-// API - FETCH THE DATA
-app.get("/getUsers", (req, res) => {    // req = data passing from frontend | res = from the database
-  // Get all the data from database
-  UserModel.find({}).then(function(users) {
-    res.json(users)
-  }).catch(function(err) {
-    res.json(err)
-  })
-})
-
-// API - FETCH THE TRIAL 2 DATA
-app.get("/getTrial2", (req, res) => {    // req = data passing from frontend | res = from the database
-  // Get all the data from database
-  Trial2Model.find({}).then(function(trial) {
-    res.json(trial)
-  }).catch(function(err) {
-    res.json(err)
-  })
-})
-
-// API - POST DATA (INSERTING DATA)
-app.post("/createUser", async (req, res) => {
-  // Code to insert a record to database
-  // Getting the data
-  const user = req.body               // The data will be attached to the body
-  // Creating new user model and pass the 'user' data
-  const newUser = new UserModel(user) 
-  await newUser.save()                // Saving the record
-
-  res.json(user)                      // Get the response (success or not)
-})
+// // API - FETCH THE DATA
+// app.get("/getUsers", (req, res) => {    // req = data passing from frontend | res = from the database
+//   // Get all the data from database
+//   UserModel.find({}).then(function(users) {
+//     res.json(users)
+//   }).catch(function(err) {
+//     res.json(err)
+//   })
+// })
 
 // ==================================================================================================
 

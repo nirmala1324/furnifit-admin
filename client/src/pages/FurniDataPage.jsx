@@ -54,7 +54,7 @@ const theme = createTheme({
   },
 });
 
-// For CHIP (Tag MultiSelect) -----------------------------------------------------------------
+// For CHIP (Tag MultiSelect) ------------------------------------------------------
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -86,166 +86,7 @@ const materials = [
 
 
 const FurniDataPage = () => {
-
-  // ================================================================================
-  // SET DATA TO DATA GRID
-  const [furnitures, setFurnitures] = useState([]);
-
-  const handleAction = (row) => {
-    // Handle action for the specific row here
-    console.log('Action clicked for row:', row);
-  };
-
-  const handleActionDelete = (row) => {
-    // Handle action for the specific row here
-    console.log('Row to delete:', row);
-  };
-
-
-  // Get Data
-  useEffect(() => {
-    axios.get('/api/getFurniData')
-      .then(response => {
-        // Add a unique 'id' property to each row
-        const rowsWithId = response.data.map(row => ({ ...row, id: row.furni_id }));
-        setFurnitures(rowsWithId);
-      })
-      .catch(error => console.error('Error fetching data:', error));
-  }, []);
-
-  // Set Column
-  const columns = [
-    { field: 'furni_id', headerName: 'ID', width: 90 },
-    { field: 'furni_name', headerName: 'Name', width: 150 },
-    { field: 'space_cat', headerName: 'Space Category', width: 120 },
-    { field: 'sub_space_cat', headerName: 'Sub Space Category', width: 150 },
-    { field: 'furni_style', headerName: 'Style', width: 120 },
-    { field: 'material_tag', headerName: 'Material Tag', width: 150 },
-    { field: 'detail_material', headerName: 'Detail Material', width: 250, 
-    renderCell: (params) => (
-      <TextField
-        sx={{ mt: 1 }}
-        id="outlined-multiline-static"
-        size="small"
-        fullWidth
-        value={params.row.detail_material}
-        multiline
-        rows={4.2}
-      />)},
-    { field: 'furni_desc', headerName: 'Description', width: 300, 
-    renderCell: (params) => (
-      <TextField
-        sx={{ mt: 1 }}
-        id="outlined-multiline-static"
-        size="small"
-        fullWidth
-        value={params.row.furni_desc}
-        multiline
-        rows={4.2}
-      />)},
-    { field: 'furni_dimension', headerName: 'Dimension', width: 150 },
-    { field: 'furni_picture', headerName: 'Picture', width: 150, renderCell: (params) => (<img src={params.row.furni_picture.url} alt="Furniture" style={{ width: '100%' }}/>)},
-    { field: 'furni_type', headerName: 'Type', width: 130 },
-    { field: 'vectary_link', headerName: 'Vectary Link', width: 200, 
-    renderCell: (params) => (
-      <TextField
-        sx={{ mt: 1 }}
-        id="outlined-multiline-static"
-        size="small"
-        fullWidth
-        value={params.row.vectary_link}
-        multiline
-        rows={4.2}
-      />)},
-    {
-      field: 'action',
-      headerName: 'Action',
-      width: 210,
-      renderCell: (params) => (
-        <div style={{display: "flex", gap: "2%", justifyContent:"center", alignItems: "center", height: "100%", width: "100%"}}>
-        <Button variant="contained" color="violet" onClick={() => handleAction(params.row)}>
-          Edit
-        </Button>
-        <Button variant="contained" color="error" onClick={() => handleActionDelete(params.row.furni_id)}>
-          Delete
-        </Button>
-        </div>
-      ),
-    },
-  ];
   
-  // ================================================================================
-
-  // ================================================================================
-  // CROPPER FUNCTIONS
-
-  const [image, setImage] = useState("");
-  const [imgAfterCrop, setImgAfterCrop] = useState("");
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
-  // Callback function when an image is selected
-  const onImageSelected = (selectedImg) => {
-    setImage(selectedImg);
-    setIsOpen(true);
-  };
-
-  // Callback function when cropping is done
-  const onCropDone = (imgCroppedArea) => {
-    const canvasWidth = 200;
-    const canvasHeight = 200;
-    // Create canvas element to crop the image
-    const canvasEle = document.createElement("canvas");
-    canvasEle.width = canvasWidth;
-    canvasEle.height = canvasHeight;
-
-    const context = canvasEle.getContext("2d");
-
-    // Load the selected image
-    let imageObj1 = new Image();
-    imageObj1.src = image;
-    imageObj1.onload = function () {
-      // Draw the cropped portion of the image onto teh canvas
-      context.drawImage(
-        imageObj1,
-        imgCroppedArea.x,
-        imgCroppedArea.y,
-        imgCroppedArea.width,
-        imgCroppedArea.height,
-        0,
-        0,
-        canvasWidth,
-        canvasHeight
-      );
-
-      // Convert the canvas content to a data URL (base64)
-      const dataURL = canvasEle.toDataURL();
-
-      setImgAfterCrop(dataURL);
-      setIsOpen(false);
-      console.log(imgAfterCrop);
-
-      // Set the imageURL to input form hidden
-      // Update the input value using React state
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        furni_picture: imgAfterCrop,
-      }));
-    };
-  };
-
-  // Callback function when cropping is done
-  const onCropCancel = () => {
-    setIsOpen(false);
-    setImage("")
-  };
-
-  // =====================================================================================
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isFurniIdAvailable, setIsFurniIdAvailable] = useState(true);
@@ -267,17 +108,20 @@ const FurniDataPage = () => {
 
   const handleChange = (e, index) => {
     const { name, value } = e.target;
-  if (name === 'furni_dimension') {
-    const updatedDimension = [...formData.furni_dimension];
-    updatedDimension[index] = value;
-    setFormData({ ...formData, furni_dimension: updatedDimension });
-  } else {
-    const updatedValue = name === 'material_tag' ? (typeof value === 'string' ? value.split(',') : value) : value;
-    setFormData({ ...formData, [name]: updatedValue });
-  }
+    if (name === 'furni_dimension') {
+      const updatedDimension = [...formData.furni_dimension];
+      updatedDimension[index] = value;
+      setFormData(prevFormData => ({ ...prevFormData, furni_dimension: updatedDimension }));
+    } else {
+      const updatedValue = name === 'material_tag' ? (typeof value === 'string' ? value.split(',') : value) : value;
+      setFormData(prevFormData => ({ ...prevFormData, [name]: updatedValue }));
+    }
     setIsFurniIdAvailable(true); // Reset availability check when the ID changes
-    console.log(formData)
   };
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -343,6 +187,245 @@ const FurniDataPage = () => {
     var modal = document.getElementById("modal");
     modal.classList.toggle("active");
   };
+  // ================================================================================
+  // SET DATA TO DATA GRID
+  const [furnitures, setFurnitures] = useState([]);
+
+  const handleAction = (row) => {
+    // Handle action for the specific row here
+    console.log('Action clicked for row:', row);
+  };
+
+  const handleActionDelete = (row) => {
+    // Handle action for the specific row here
+    console.log('Row to delete:', row);
+  };
+
+
+  // Get Data
+  useEffect(() => {
+    axios.get('/api/getFurniData')
+      .then(response => {
+        // Add a unique 'id' property to each row
+        const rowsWithId = response.data.map(row => ({ ...row, id: row.furni_id }));
+        setFurnitures(rowsWithId);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
+  // Set Column
+  const columns = [
+    { field: 'furni_id', headerName: 'ID', width: 90 },
+    { field: 'furni_name', headerName: 'Name', width: 150 },
+    { field: 'space_cat', headerName: 'Space Category', width: 120 },
+    { field: 'sub_space_cat', headerName: 'Sub Space Category', width: 150 },
+    { field: 'furni_style', headerName: 'Style', width: 120 },
+    { field: 'material_tag', headerName: 'Material Tag', width: 150 },
+    { field: 'detail_material', headerName: 'Detail Material', width: 250, 
+    renderCell: (params) => (
+      <TextField
+        sx={{ mt: 1 }}
+        id="outlined-multiline-static"
+        size="small"
+        fullWidth
+        value={params.row.detail_material}
+        multiline
+        rows={4.2}
+      />)},
+    { field: 'furni_desc', headerName: 'Description', width: 300, 
+    renderCell: (params) => (
+      <TextField
+        sx={{ mt: 1 }}
+        id="outlined-multiline-static"
+        size="small"
+        fullWidth
+        value={params.row.furni_desc}
+        multiline
+        rows={4.2}
+      />)},
+    { field: 'furni_dimension', headerName: 'Dimension', width: 150, 
+      renderCell: (params) => (params.row.furni_dimension[0] + " x " + params.row.furni_dimension[1] + " x " + params.row.furni_dimension[2] + " mm") 
+    },
+    { field: 'furni_picture', headerName: 'Picture', width: 150, renderCell: (params) => (<img src={params.row.furni_picture.url} alt="Furniture" style={{ width: '100%' }}/>)},
+    { field: 'furni_type', headerName: 'Type', width: 130 },
+    { field: 'vectary_link', headerName: 'Vectary Link', width: 200, 
+    renderCell: (params) => (
+      <TextField
+        sx={{ mt: 1 }}
+        id="outlined-multiline-static"
+        size="small"
+        fullWidth
+        value={params.row.vectary_link}
+        multiline
+        rows={4.2}
+      />)},
+    {
+      field: 'action',
+      headerName: 'Action',
+      width: 210,
+      renderCell: (params) => (
+        <div style={{display: "flex", gap: "2%", justifyContent:"center", alignItems: "center", height: "100%", width: "100%"}}>
+        <Button variant="contained" color="violet" onClick={() => handleAction(params.row)}>
+          Edit
+        </Button>
+        <Button variant="contained" color="error" onClick={() => handleActionDelete(params.row.furni_id)}>
+          Delete
+        </Button>
+        </div>
+      ),
+    },
+  ];
+  
+  // ================================================================================
+
+  // ================================================================================
+  // CROPPER FUNCTIONS
+
+  const [image, setImage] = useState("");
+  const [imgAfterCrop, setImgAfterCrop] = useState("");
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  function resizeAndCompressBase64Image(base64Image, targetSizeInKB) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = base64Image;
+  
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const MAX_WIDTH = 800; // Max width for resizing
+        const MAX_HEIGHT = 600; // Max height for resizing
+        let width = img.width;
+        let height = img.height;
+  
+        // Resize the image while maintaining aspect ratio
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+        if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
+        }
+  
+        canvas.width = width;
+        canvas.height = height;
+  
+        ctx.drawImage(img, 0, 0, width, height);
+  
+        // Initialize quality for compression
+        let quality = 0.9; // Initial quality
+  
+        // Convert canvas to base64-encoded image with specified quality
+        let resizedBase64Image = canvas.toDataURL('image/jpeg', quality); // Initial conversion
+  
+        // Binary search to find the optimal quality for target file size
+        let lower = 0;
+        let upper = 1;
+        let iterations = 0;
+  
+        while (iterations < 10) { // Limit iterations to avoid infinite loop
+          resizedBase64Image = canvas.toDataURL('image/jpeg', quality);
+          const sizeInBytes = resizedBase64Image.length * 3 / 4; // Estimate size based on base64 encoding
+  
+          if (sizeInBytes < targetSizeInKB * 1024) {
+            lower = quality;
+          } else {
+            upper = quality;
+          }
+  
+          quality = (lower + upper) / 2;
+          iterations++;
+        }
+  
+        // Final conversion with optimized quality
+        resizedBase64Image = canvas.toDataURL('image/jpeg', quality);
+  
+        resolve(resizedBase64Image);
+      };
+  
+      img.onerror = () => {
+        reject(new Error('Failed to load the image.'));
+      };
+    });
+  }
+  
+  
+
+  // Callback function when an image is selected
+  const onImageSelected = (selectedImg) => {
+    setImage(selectedImg);
+    setIsOpen(true);
+  };
+
+  // Callback function when cropping is done
+  // Callback function when cropping is done
+  const onCropDone = (imgCroppedArea) => {
+    const canvasWidth = 200;
+    const canvasHeight = 200;
+    // Create canvas element to crop the image
+    const canvasEle = document.createElement("canvas");
+    canvasEle.width = canvasWidth;
+    canvasEle.height = canvasHeight;
+  
+    const context = canvasEle.getContext("2d");
+  
+    // Create an Image object with the base64 image data
+    let imageObj1 = new Image();
+    imageObj1.src = image; // Assuming 'image' contains the base64 image data
+  
+    imageObj1.onload = function () {
+      // Draw the cropped portion of the image onto the canvas
+      context.drawImage(
+        imageObj1,
+        imgCroppedArea.x,
+        imgCroppedArea.y,
+        imgCroppedArea.width,
+        imgCroppedArea.height,
+        0,
+        0,
+        canvasWidth,
+        canvasHeight
+      );
+  
+      // Convert the canvas content to a data URL (base64)
+      const dataURL = canvasEle.toDataURL();
+  
+      // Resize and compress the base64 image if necessary
+      resizeAndCompressBase64Image(dataURL, 100) // Check if image exceeds 100KB and resize if necessary
+        .then(resizedImage => {
+          setImgAfterCrop(resizedImage);
+          setIsOpen(false);
+        })
+        .catch(error => {
+          console.error('Error resizing and compressing image:', error);
+          // Handle error
+        });
+    };
+  };
+  
+
+  useEffect(() => {
+    // Update the formData when imgAfterCrop changes
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      furni_picture: imgAfterCrop,
+    }));
+  }, [imgAfterCrop]);
+
+  // Callback function when cropping is done
+  const onCropCancel = () => {
+    setIsOpen(false);
+    setImage("")
+  };
+
+  // =====================================================================================
+
 
   return (
     <ThemeProvider theme={theme}>
