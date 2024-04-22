@@ -3,8 +3,8 @@ import "../styles/furni_data_page.scss";
 import axios from "axios";
 
 // IMPORTING COMPONENTS
-import FileInput from "../components/CropPhotoTrial/FileInput";
-import CustomModal from "../components/CropPhotoTrial/Modal";
+import FileInput from "../components/CropPhoto/FileInput";
+import CustomModal from "../components/CropPhoto/Modal";
 // ROUTING
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +20,7 @@ import {
 } from "@mui/material/styles";
 
 import {
+  Stack,
   TextField,
   FormControl,
   InputLabel,
@@ -30,6 +31,8 @@ import {
   Box,
   InputAdornment,
   CircularProgress,
+  Alert,
+  Collapse,
 } from "@mui/material";
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -40,6 +43,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 // DATA GRID
 import { DataGrid } from "@mui/x-data-grid";
+import DeleteConfirmation from "../components/CRUDFunctionality/DeleteConfirmation";
 
 const violetBase = "#248b96";
 
@@ -90,6 +94,8 @@ const FurniDataPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isFurniIdAvailable, setIsFurniIdAvailable] = useState(true);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
   const [formData, setFormData] = useState({
     furni_id: "",
@@ -120,7 +126,6 @@ const FurniDataPage = () => {
   };
 
   useEffect(() => {
-    console.log(formData);
   }, [formData]);
 
   const handleSubmit = async (e) => {
@@ -128,8 +133,7 @@ const FurniDataPage = () => {
     
     if (isFurniIdAvailable) {
     try { 
-      await axios.post("/api/submit-form", formData);
-      alert("Furniture data saved successfully");
+      const response = await axios.post("/api/submit-form", formData);
       // Clear form data after successful submission if needed
       setFormData({
         furni_id: "",
@@ -145,9 +149,9 @@ const FurniDataPage = () => {
         material_tag: [],
         vectary_link: "",
       });
-
-      // Reload page after success
-      window.location.reload()
+      toggleForm
+      setAlertMessage(response.data.message);
+      setOpenAlert(true);
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("Error submitting form. Please try again later.");
@@ -159,7 +163,6 @@ const FurniDataPage = () => {
   const handleFurniIdCheck = async () => {
     setLoading(true);
     try {
-      console.log("Checking run")
       const response = await axios.get(`/api/checkFurnitureID/${formData.furni_id}`);
       console.log(response)
       if (response.data.status === "success" && response.data.message === "already exist") {
@@ -195,23 +198,39 @@ const FurniDataPage = () => {
     // Handle action for the specific row here
     console.log('Action clicked for row:', row);
   };
-
-  const handleActionDelete = (row) => {
-    // Handle action for the specific row here
-    console.log('Row to delete:', row);
-  };
-
-
+  
+  
   // Get Data
   useEffect(() => {
     axios.get('/api/getFurniData')
-      .then(response => {
-        // Add a unique 'id' property to each row
-        const rowsWithId = response.data.map(row => ({ ...row, id: row.furni_id }));
-        setFurnitures(rowsWithId);
-      })
-      .catch(error => console.error('Error fetching data:', error));
+    .then(response => {
+      // Add a unique 'id' property to each row
+      const rowsWithId = response.data.map(row => ({ ...row, id: row.furni_id }));
+      setFurnitures(rowsWithId);
+    })
+    .catch(error => console.error('Error fetching data:', error));
   }, []);
+
+  
+  // DELETE FURNITURE DATA ===============================================================
+  const handleDelete = async (furnitureID, furnitureName) => {
+    try { 
+      const response = await axios.delete(`/api/deleteFurniture/${furnitureID}`);
+      setAlertMessage(response.data.message);
+      setOpenAlert(true);
+    } catch (error) {
+      console.error("Error deleting furniture:", error.response.data.message);
+      // Handle error as needed
+    }
+  };
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+    // Reload page after success
+    window.location.reload() 
+  };
+  // =====================================================================================
+
 
   // Set Column
   const columns = [
@@ -268,9 +287,7 @@ const FurniDataPage = () => {
         <Button variant="contained" color="violet" onClick={() => handleAction(params.row)}>
           Edit
         </Button>
-        <Button variant="contained" color="error" onClick={() => handleActionDelete(params.row.furni_id)}>
-          Delete
-        </Button>
+        <DeleteConfirmation furnitureID={params.row.id} furnitureName={params.row.furni_name} onDelete={handleDelete} />
         </div>
       ),
     },
@@ -354,8 +371,6 @@ const FurniDataPage = () => {
       };
     });
   }
-  
-  
 
   // Callback function when an image is selected
   const onImageSelected = (selectedImg) => {
@@ -408,7 +423,6 @@ const FurniDataPage = () => {
         });
     };
   };
-  
 
   useEffect(() => {
     // Update the formData when imgAfterCrop changes
@@ -427,8 +441,22 @@ const FurniDataPage = () => {
   // =====================================================================================
 
 
+
   return (
     <ThemeProvider theme={theme}>
+      {/* Alert component */}
+      <Stack sx={{ width: '100%', mt: 2, position: "absolute", top: 0, left: 0, right: 0, zIndex: "2", textAlign: "center" }} spacing={2}>
+        <Collapse in={openAlert} style={{ width: "100%" }}>
+          <Alert
+            style={{ width: "40%", margin: "0 auto" }}
+            severity="success"
+            onClose={handleCloseAlert}
+          >
+            {alertMessage}
+          </Alert>
+        </Collapse>
+      </Stack>
+
       <div className="outer-container" id="blur">
         <div className="content-container">
           <div className="side-bar">
@@ -777,7 +805,7 @@ const FurniDataPage = () => {
                   <FileInput onImageSelected={onImageSelected} />
                   <div className="cropped-container">
                     <img style={{ borderRadius: "15px" }} src={imgAfterCrop} />
-                    <input id="url-image-input" value={formData.furni_picture} onChange={handleChange} name="furni_pic" />
+                    <input id="url-image-input" style={{visibility:"hidden"}} value={formData.furni_picture} onChange={handleChange} name="furni_pic" />
                   </div>
                 </div>
                 <CustomModal
@@ -798,6 +826,7 @@ const FurniDataPage = () => {
             variant="contained"
             color="violet"
             fullWidth
+            onClick={toggleForm}
           >
             Submit
           </Button>

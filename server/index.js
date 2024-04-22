@@ -111,16 +111,35 @@ app.delete("/deleteFurniture/:furnitureID", async (req, res) => {
   const { furnitureID } = req.params;
 
   try {
+    // Find the furniture document in the database
     const deletedFurniture = await FurnitureModel.findOneAndDelete({ furni_id: furnitureID });
+  
+    // Check if furniture was found and deleted
+    if (!deletedFurniture) {
+      // Furniture not found
+      return res.status(404).json({ message: "Furniture not found" });
+    }
+  
+    // Extract the publicID of the associated image
+    const publicID = deletedFurniture.furni_picture.public_id;
+  
+    // Delete the image from Cloudinary
+    const deleteResult = await cloudinary.uploader.destroy(publicID, function(result) { console.log(result) });
 
-    if (deletedFurniture) {
-      res.status(200).json({ message: "Furniture deleted successfully" });
+  
+    // Check if image deletion was successful
+    if (deleteResult.result === 'ok') {
+      // Image deleted successfully from Cloudinary
+      return res.status(200).json({ message: "Furniture and associated image deleted successfully" });
     } else {
-      res.status(404).json({ message: "Furniture not found" });
+      // Failed to delete image from Cloudinary
+      console.error("Failed to delete image from Cloudinary:", deleteResult);
+      return res.status(500).json({ message: "Failed to delete image from Cloudinary" });
     }
   } catch (error) {
+    // Handle any errors
     console.error("Error deleting furniture:", error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
