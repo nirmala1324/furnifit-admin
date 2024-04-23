@@ -47,6 +47,14 @@
     .title-modal {
       font-size: func.toEm(29);
       font-weight: 600;
+
+      p {
+        margin: 0;
+      }
+
+      span {
+        color: #b92521
+      }
     }
 
     .form-container {
@@ -288,6 +296,7 @@
             }
 
             .dataTable {
+                
                 background-color: #dae9ea;
                 width: 100%;
                 height: 86%;

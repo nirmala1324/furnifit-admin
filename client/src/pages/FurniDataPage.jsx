@@ -94,10 +94,18 @@ const FurniDataPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isFurniIdAvailable, setIsFurniIdAvailable] = useState(true);
-  const [openAlert, setOpenAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
 
-  const [formData, setFormData] = useState({
+  // MESSAGES
+  const [alertMessage, setAlertMessage] = useState('');
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertErrorMessage, setAlertErrorMessage] = useState('');
+  const [openErrorAlert, setOpenErrorAlert] = useState(false);
+
+  // EDIT STATE
+  const [publicID, setPublicID] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
+
+  const stateObjFormData = {
     furni_id: "",
     furni_name: "",
     space_cat: "",
@@ -110,7 +118,9 @@ const FurniDataPage = () => {
     furni_style: "",
     material_tag: [],
     vectary_link: "",
-  });
+  }
+
+  const [formData, setFormData] = useState(stateObjFormData);
 
   const handleChange = (e, index) => {
     const { name, value } = e.target;
@@ -122,7 +132,6 @@ const FurniDataPage = () => {
       const updatedValue = name === 'material_tag' ? (typeof value === 'string' ? value.split(',') : value) : value;
       setFormData(prevFormData => ({ ...prevFormData, [name]: updatedValue }));
     }
-    setIsFurniIdAvailable(true); // Reset availability check when the ID changes
   };
 
   useEffect(() => {
@@ -149,14 +158,64 @@ const FurniDataPage = () => {
         material_tag: [],
         vectary_link: "",
       });
-      toggleForm
+      toggleForm;
       setAlertMessage(response.data.message);
       setOpenAlert(true);
     } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("Error submitting form. Please try again later.");
+      setAlertErrorMessage("Error submitting form. Please try again later.")
+      setOpenErrorAlert(true)
     }
+  } else {
+    setAlertErrorMessage("The furniture ID is already exists")
+    setOpenErrorAlert(true)
   }
+  };
+  
+  // EDIT FORM HANDLING ===========================================================
+
+  const handleModalEditClose = () => {
+    toggleForm();
+    setIsEdit(false);
+    setFormData(stateObjFormData)
+  }
+
+  const handleEdit = (rowData) => {    // Handle the data set to modal - the one injected to edit button
+    setIsEdit(true);
+    setFormData(rowData); 
+    setPublicID(rowData.furni_picture.public_id);
+    toggleForm();
+  }
+
+  const handleSubmitEdit = async (e) => {
+    e.preventDefault();
+    try { 
+      const response = await axios.post("/api/submit-edit-form", formData);
+      // Clear form data after successful submission if needed
+      setFormData({
+        furni_id: "",
+        furni_name: "",
+        space_cat: "",
+        sub_space_cat: "",
+        detail_material: "",
+        furni_desc: "",
+        furni_dimension: ['', '', ''],
+        furni_picture: { public_id: "", url: "" },
+        furni_type: "",
+        furni_style: "",
+        material_tag: [],
+        vectary_link: "",
+      });
+      if (publicID) {
+        formData.public_id = publicID;
+      }
+      toggleForm;
+      setAlertMessage(response.data.message);
+      setOpenAlert(true);
+    } catch (error) {
+      setAlertErrorMessage("Error editing data of " + formData.furni_name + ". Please try again later.")
+      setOpenErrorAlert(true)
+    }
+    console.log(isEdit, publicID, formData);
   };
 
   // HANDLE CHECK Furniture ID
@@ -164,7 +223,6 @@ const FurniDataPage = () => {
     setLoading(true);
     try {
       const response = await axios.get(`/api/checkFurnitureID/${formData.furni_id}`);
-      console.log(response)
       if (response.data.status === "success" && response.data.message === "already exist") {
         setIsFurniIdAvailable(false);
         setError('Furniture ID already exists. Please choose a different one.');
@@ -174,7 +232,6 @@ const FurniDataPage = () => {
       } 
       setLoading(false);
     } catch (error) {
-      console.error('Error checking furniture ID:', error);
       setError('Error checking furniture ID. Please try again later.');
       setLoading(false);
     }
@@ -228,6 +285,10 @@ const FurniDataPage = () => {
     setOpenAlert(false);
     // Reload page after success
     window.location.reload() 
+  };
+
+  const handleCloseErrorAlert = () => {
+    setOpenErrorAlert(false);
   };
   // =====================================================================================
 
@@ -284,7 +345,7 @@ const FurniDataPage = () => {
       width: 210,
       renderCell: (params) => (
         <div style={{display: "flex", gap: "2%", justifyContent:"center", alignItems: "center", height: "100%", width: "100%"}}>
-        <Button variant="contained" color="violet" onClick={() => handleAction(params.row)}>
+        <Button variant="contained" color="violet" onClick={() => handleEdit(params.row)}>
           Edit
         </Button>
         <DeleteConfirmation furnitureID={params.row.id} furnitureName={params.row.furni_name} onDelete={handleDelete} />
@@ -455,7 +516,17 @@ const FurniDataPage = () => {
             {alertMessage}
           </Alert>
         </Collapse>
+        <Collapse in={openErrorAlert} style={{ width: "100%" }}>
+          <Alert
+            style={{ width: "40%", margin: "0 auto" }}
+            severity="error"
+            onClose={handleCloseErrorAlert}
+          >
+            {alertErrorMessage}
+          </Alert>
+        </Collapse>
       </Stack>
+
 
       <div className="outer-container" id="blur">
         <div className="content-container">
@@ -514,11 +585,17 @@ const FurniDataPage = () => {
 
       <div className="modal" id="modal">
         <div className="close-button" 
-            onClick={toggleForm}>
+            onClick={!isEdit ? toggleForm : handleModalEditClose}>
           <CloseIcon />
         </div>
-        <form onSubmit={handleSubmit}>
-          <div className="title-modal">Furniture Data Form</div>
+        <form onSubmit={isEdit ? handleSubmitEdit : handleSubmit}>
+          <div className="title-modal"> 
+            {isEdit ? (
+              <p>Edit Furniture Data of <span>{formData.furni_id}</span></p>
+            ) : (
+              <p>Furniture Data Form</p>
+            )}
+          </div>
           <div className="form-container">
 
             {/* LEFT SECTION */}
@@ -527,8 +604,8 @@ const FurniDataPage = () => {
               {/* Data Form Submission Part 1 */}
               <div className="check-container">
                 <div className="upper-part">
-                  <TextField size="small" label="Furniture ID" name="furni_id" error={!isFurniIdAvailable} value={formData.furni_id} onChange={handleChange} fullWidth required />
-                  <Button color="violet" variant="contained" onClick={handleFurniIdCheck} disabled={!formData.furni_id || loading} style={{ marginLeft: "10px", width:"150px" }} >
+                  <TextField size="small" disabled={isEdit} label="Furniture ID" name="furni_id" error={!isFurniIdAvailable} value={formData.furni_id} onChange={handleChange} fullWidth required />
+                  <Button color="violet" variant="contained" onClick={handleFurniIdCheck} disabled={!formData.furni_id || loading} style={{ marginLeft: "10px", width:"150px", display: !isEdit ?"block" : "none" }} >
                     Check ID
                   </Button>
                 </div>  
@@ -804,7 +881,7 @@ const FurniDataPage = () => {
                 >
                   <FileInput onImageSelected={onImageSelected} />
                   <div className="cropped-container">
-                    <img style={{ borderRadius: "15px" }} src={imgAfterCrop} />
+                    <img style={{ borderRadius: "15px" }} src={imgAfterCrop? imgAfterCrop : formData.furni_picture.url} />
                     <input id="url-image-input" style={{visibility:"hidden"}} value={formData.furni_picture} onChange={handleChange} name="furni_pic" />
                   </div>
                 </div>
@@ -821,15 +898,28 @@ const FurniDataPage = () => {
             </div>
           </div>
           <div className="button-submit">
+          {isEdit ? (
           <Button
             type="submit"
             variant="contained"
             color="violet"
             fullWidth
-            onClick={toggleForm}
+            onClick={ toggleForm }
           >
-            Submit
+            Edit
           </Button>
+          ) : (
+            <Button
+              type="submit"
+              variant="contained"
+              color="violet"
+              fullWidth
+              onClick={isFurniIdAvailable ? toggleForm : null}
+              disabled={!isFurniIdAvailable}
+            >
+              Submit
+            </Button>
+          )}
           </div>
         </form>
       </div>

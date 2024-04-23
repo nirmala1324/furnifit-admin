@@ -106,6 +106,72 @@ app.post("/submit-form", async (req, res ) => {
   }
 })
 
+// API Add Data form from Client Side
+app.post("/submit-edit-form", async (req, res ) => {
+  // Extracting data from the POST request body
+  const { furni_id, furni_name, space_cat, sub_space_cat, detail_material, furni_desc, furni_dimension, furni_picture, furni_type, furni_style, material_tag, vectary_link, public_id } = req.body;
+  
+  try {
+    //===============================================================================
+    // Updating the photo in Cloudinary
+    // Check if the furni_picture is containing object or a string
+    let updatedFurniPicture = {}; // Initialize updated furniture picture object
+    
+    if (typeof furni_picture === "string") {
+      const editPublicID = public_id
+      const editFurni_Picture = furni_picture
+
+      // Delete the previous media
+      if (editPublicID) {
+        await cloudinary.uploader.destroy(public_id); // Delete previous media using its public_id
+      }
+
+      // Edit - upload new picture to existing public_id
+      const result = await cloudinary.uploader.upload(editFurni_Picture, {
+        folder: "furnitures", // Upload to the "furnitures" folder
+        resource_type: "image" // Specify the resource type as image
+      });
+
+      // Update updatedFurniPicture with new public_id and url from Cloudinary
+      updatedFurniPicture = {
+        public_id: result.public_id,
+        url: result.secure_url
+      };
+      // Correct assignment to updatedFurniPicture
+      updatedFurniPicture = updatedFurniPicture;
+    } else {
+      updatedFurniPicture = furni_picture;
+    }
+    //===============================================================================
+    
+    // Create or update the furniture document in MongoDB
+    const updatedFurniture = await FurnitureModel.findOneAndUpdate(
+      { furni_id: furni_id }, // Search for furniture document by furni_id
+      { 
+        $set: { // Set new values for the document fields
+          furni_name, 
+          space_cat, 
+          sub_space_cat, 
+          detail_material, 
+          furni_desc,
+          furni_dimension, 
+          furni_picture: updatedFurniPicture, // Updated furniture picture
+          furni_type, 
+          furni_style, 
+          material_tag, 
+          vectary_link 
+        }
+      },
+      { new: true, upsert: true } // Options: return the modified document and create if not exists
+    );
+    res.status(200).json({ status: "success", message: "Data of " + furni_name + " updated successfully", updatedFurniture });
+  } catch (err){
+    console.error("Error updating furniture data: ", err);
+    res.status(500).json({ message: "Error updating furniture data" });
+  }
+})
+
+
 // API Deleting from certain furniture_id of a row data
 app.delete("/deleteFurniture/:furnitureID", async (req, res) => {
   const { furnitureID } = req.params;
