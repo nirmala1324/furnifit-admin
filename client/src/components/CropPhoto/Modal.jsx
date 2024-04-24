@@ -49,7 +49,7 @@ const CustomModal = ({
             }}
           />
           
-    justify-content: center;
+    justify-content: center; 
     align-items: center;
     display: flex;
     height: 20%;
@@ -64,7 +64,7 @@ const CustomModal = ({
               </Button>
             </div>
             <div className="apply-button">
-              <Button
+              <Button  
                 variant="violet"
                 size="small"
                 onClick={() => {

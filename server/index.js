@@ -209,6 +209,45 @@ app.delete("/deleteFurniture/:furnitureID", async (req, res) => {
   }
 });
 
+
+// ==================================================================================================
+// API FOR DASHBOARD
+
+// Get data for charts
+app.get('/dataToCharts', async (req, res) => {
+  try {
+    const entities = ['material_tag', 'furni_type', 'furni_style', 'sub_space_cat']; // Add more entities if needed
+
+    const promises = entities.map(entity => {
+      return FurnitureModel.aggregate([
+        { $unwind: `$${entity}` }, // Unwind the array of labels
+        { $group: { _id: `$${entity}`, total: { $sum: 1 } } }
+      ])
+      .then(results => {
+        return {
+          entity,
+          data: results.map((result, index) => ({
+            id: index,
+            value: result.total,
+            label: result._id || 'Unknown' // If _id is null or undefined, set label to 'Unknown'
+          }))
+        };
+      });
+    });
+
+    const aggregatedData = await Promise.all(promises);
+
+    res.json(aggregatedData);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+
+
 app.listen(3001, () => {
   console.log("Server is running");
 });
