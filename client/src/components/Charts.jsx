@@ -38,6 +38,7 @@ import axios from "axios";
 const Charts = () => {
 
   // ================================================================================
+
   // SET DATA TO DATA CHARTS
   const [styleData, setStyleData] = useState([]);
   const [subSpaceData, setSubSpaceData] = useState([]);
@@ -52,7 +53,7 @@ const Charts = () => {
         // Fetch and set other data sets here if needed
         
         // Set Style Data
-        const rawDataStyle = response.data[2].data;
+        const rawDataStyle = response.data.aggregatedData[2].data;
         const theStyleData = rawDataStyle.map((item, index) => ({
           id: index,
           value: item.value,
@@ -61,7 +62,7 @@ const Charts = () => {
         setStyleData(theStyleData);
 
         // Set Style Data
-        const rawDataSubSpace = response.data[3].data;
+        const rawDataSubSpace = response.data.aggregatedData[3].data;
         const theSubSpaceData = rawDataSubSpace.map((item, index) => ({
           id: index,
           value: item.value,
@@ -70,7 +71,7 @@ const Charts = () => {
         setSubSpaceData(theSubSpaceData);
 
         // Set Style Data
-        const rawDataType = response.data[1].data;
+        const rawDataType = response.data.aggregatedData[1].data;
         const theTypeData = rawDataType.map((item, index) => ({
           id: index,
           value: item.value,
@@ -79,7 +80,7 @@ const Charts = () => {
         setTypeData(theTypeData);
 
         // Set Style Data
-        const rawMainMat = response.data[0].data;
+        const rawMainMat = response.data.aggregatedData[0].data;
         const theMainMat = rawMainMat.map((item, index) => ({
           id: index,
           value: item.value,

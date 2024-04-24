@@ -17,6 +17,54 @@ const DashboardPage = () => {
   
   const navigate = useNavigate() // Goes to homepage
 
+  // SET TOTAL COUNT DATA =======================================================
+  const [totalData, setTotalData] = useState([]);
+
+  useEffect( () => {
+    const fetchTotalDataCount = async () => {
+      try {
+        const response = await axios.get('/api/dataToCharts');
+
+        setTotalData(response.data.totalCount)
+
+      } catch (error) {
+        console.error('Error fetching total data:', error);
+      }
+    }
+
+    fetchTotalDataCount();
+  }, [])
+
+
+  // SET DATA GRID =============================================================
+
+  const [furnitures, setFurnitures] = useState([]);
+
+  // Set Column
+  const columns = [
+    { field: 'furni_id', headerName: 'ID', width: 90 },
+    { field: 'furni_name', headerName: 'Name', width: 150 },
+    { field: 'space_cat', headerName: 'Space Category', width: 120 },
+    { field: 'sub_space_cat', headerName: 'Sub Space Category', width: 150 },
+    { field: 'furni_style', headerName: 'Style', width: 120 },
+    { field: 'material_tag', headerName: 'Material Tag', width: 150 },
+    { field: 'furni_dimension', headerName: 'Dimension', width: 150, 
+      renderCell: (params) => (params.row.furni_dimension[0] + " x " + params.row.furni_dimension[1] + " x " + params.row.furni_dimension[2] + " mm") 
+    },
+    { field: 'furni_type', headerName: 'Type', width: 130 },
+  ];
+
+  // Get The Data
+  useEffect(() => {
+    axios.get('/api/getFurniData')
+    .then(response => {
+      // Add a unique 'id' property to each row
+      const rowsWithId = response.data.map(row => ({ ...row, id: row.furni_id }));
+      setFurnitures(rowsWithId);
+    })
+    .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
   // HTML
   return (
     <div className="outer-container">
@@ -62,17 +110,17 @@ const DashboardPage = () => {
               <div className="total-data">
                   <div className="big-text">Furniture Data in Total</div>
                   <div className="divider"></div>
-                  <div className="total">100</div>
+                  <div className="total">{totalData}</div>
               </div>
               <div className="data-table">
                 <div className="header">
                   <div className="title">Furnitures</div>
-                  <div className="view-all">View all</div>
+                  <div className="view-all" style={{cursor: "pointer"}} onClick={() => navigate('/furni-data')}>View all</div>
                 </div>
                 <div className="dataTable">
                 <DataGrid
-                  columns={[{ field: 'ID' }, { field: 'First name' }, { field: 'Last name' }]}
-                  rows={[]}
+                  columns={columns}
+                  rows={furnitures}
                   sx={{ '--DataGrid-overlayHeight': '300px' }}
                 />
                 </div>

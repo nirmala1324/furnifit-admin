@@ -218,6 +218,8 @@ app.get('/dataToCharts', async (req, res) => {
   try {
     const entities = ['material_tag', 'furni_type', 'furni_style', 'sub_space_cat']; // Add more entities if needed
 
+    const totalCountPromise = FurnitureModel.countDocuments(); // Count all documents in the FurnitureModel collection
+
     const promises = entities.map(entity => {
       return FurnitureModel.aggregate([
         { $unwind: `$${entity}` }, // Unwind the array of labels
@@ -235,14 +237,15 @@ app.get('/dataToCharts', async (req, res) => {
       });
     });
 
-    const aggregatedData = await Promise.all(promises);
+    const [totalCount, aggregatedData] = await Promise.all([totalCountPromise, Promise.all(promises)]);
 
-    res.json(aggregatedData);
+    res.json({ totalCount, aggregatedData });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 
