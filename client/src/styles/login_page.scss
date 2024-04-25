@@ -1,2 +1,72 @@
 @use "../utilities/functions.scss" as func;
 @import "../utilities/mixins.scss";
+
+.main-container {
+  width: 100vw;
+  height: 100vh;
+  
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+
+  .header-container {
+    padding: 0.7% 0 0 0.9%;
+    
+    .logo {
+      aspect-ratio: 500/ 114;
+      width: 16%;
+      height: unset;
+      background: url("../assets/dashboard/pc_logo_long_1.webp") center/cover
+        no-repeat;
+    }
+    
+  }
+
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 80%;
+    width: 100%;
+
+
+    .center-container {
+        width: 22%;
+        height: 52%;
+        background-color: rgba($color: #ffffff, $alpha: 0.6);
+        border-radius: 15px;
+        padding: 3%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .title {
+            opacity: 0.8;
+            font-weight: 600;
+            margin-top: 16%;
+            justify-content: center;
+            display: flex;
+            width: 100%;
+            font-size: 25px;
+        }
+
+        .inputs {
+            margin-top: 8%;
+        }
+
+        .button {
+            justify-content: end;
+            display: flex;
+            width: 100%;
+            margin-top: 8%;
+        }
+    }
+  }
+
+  .footer-container {
+    padding: 1.2% 0 1.2% 1.9%;
+  }
+}
+

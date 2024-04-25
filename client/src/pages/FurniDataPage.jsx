@@ -250,12 +250,6 @@ const FurniDataPage = () => {
   // ================================================================================
   // SET DATA TO DATA GRID
   const [furnitures, setFurnitures] = useState([]);
-
-  const handleAction = (row) => {
-    // Handle action for the specific row here
-    console.log('Action clicked for row:', row);
-  };
-  
   
   // Get Data
   useEffect(() => {
