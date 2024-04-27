@@ -21,7 +21,7 @@ const LoginPage = ({ key }) => { // Pass a key to force re-render
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/login", {
+      const response = await axios.post("https://furnifit-admin-backend.vercel.app/login", {
         username,
         password,
       });
