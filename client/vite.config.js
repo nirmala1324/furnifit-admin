@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3001', // Your Express server address
+        target: 'https://furnifit-admin-api.vercel.app/', // Your Express server address
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
