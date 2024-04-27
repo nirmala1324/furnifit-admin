@@ -7,12 +7,6 @@ import "swiper/css/navigation";
 // CHART
 import { PieChart } from "@mui/x-charts/PieChart";
 
-const data = [
-  { id: 0, value: 10, label: "series A" },
-  { id: 1, value: 15, label: "series B" },
-  { id: 2, value: 20, label: "series C" }
-];
-
 // color
 const Set3 = [
   '#8dd3c7',
@@ -124,8 +118,8 @@ const Charts = () => {
               <div className="stat-title">Style</div>
               <PieChart
                 colors={Set3}
-                margin={{ right: data.length > 6 ? 95 : 200, left: data.length > 6 ? 0 : 10 }}
-                slotProps={{ legend: { hidden: data.length > 6 ? true : false } }}
+                margin={{ right: styleData.length > 6 ? 95 : 200, left: styleData.length > 6 ? 0 : 10 }}
+                slotProps={{ legend: { hidden: styleData.length > 6 ? true : false } }}
                 series={[
                   {
                     data: styleData,
@@ -141,7 +135,7 @@ const Charts = () => {
                   },
                 ]}
                 height={200}
-                width={data.length > 6 ? 570 : 450}
+                width={styleData.length > 6 ? 570 : 450}
               />
             </div>
           </SwiperSlide>
@@ -156,8 +150,8 @@ const Charts = () => {
               <div className="stat-title">Sub-Space</div>
               <PieChart
                 colors={Set3}
-                margin={{ right: data.length > 6 ? 95 : 120, left: data.length > 6 ? 0 : 10 }}
-                slotProps={{ legend: { hidden: data.length > 6 ? true : false } }}
+                margin={{ right: subSpaceData.length > 6 ? 95 : 120, left: subSpaceData.length > 6 ? 0 : 10 }}
+                slotProps={{ legend: { hidden: subSpaceData.length > 6 ? true : false } }}
                 series={[
                   {
                     data: subSpaceData,
@@ -173,7 +167,7 @@ const Charts = () => {
                   },
                 ]}
                 height={200}
-                width={data.length > 6 ? 570 : 410}
+                width={subSpaceData.length > 6 ? 570 : 410}
               />
             </div>
           </SwiperSlide>
@@ -188,8 +182,8 @@ const Charts = () => {
               <div className="stat-title">Furniture Types</div>
               <PieChart
                 colors={Set3}
-                margin={{ right: data.length > 6 ? 95 : 120, left: data.length > 6 ? 0 : 10 }}
-                slotProps={{ legend: { hidden: data.length > 6 ? true : false } }}
+                margin={{ right: typeData.length > 6 ? 95 : 120, left: typeData.length > 6 ? 0 : 10 }}
+                slotProps={{ legend: { hidden: typeData.length > 6 ? true : false } }}
                 series={[
                   {
                     data: typeData,
@@ -205,7 +199,7 @@ const Charts = () => {
                   },
                 ]}
                 height={200}
-                width={data.length > 6 ? 570 : 410}
+                width={typeData.length > 6 ? 570 : 410}
               />
             </div>
           </SwiperSlide>
@@ -220,8 +214,8 @@ const Charts = () => {
               <div className="stat-title">Main Material</div>
               <PieChart
                 colors={Set3}
-                margin={{ right: data.length > 6 ? 95 : 120, left: data.length > 6 ? 0 : 10 }}
-                slotProps={{ legend: { hidden: data.length > 6 ? true : false } }}
+                margin={{ right: mainMaterialData.length > 6 ? 95 : 120, left: mainMaterialData.length > 6 ? 0 : 10 }}
+                slotProps={{ legend: { hidden: mainMaterialData.length > 6 ? true : false } }}
                 series={[
                   {
                     data: mainMaterialData,
@@ -237,7 +231,7 @@ const Charts = () => {
                   },
                 ]}
                 height={200}
-                width={data.length > 6 ? 570 : 410}
+                width={mainMaterialData.length > 6 ? 570 : 410}
               />
             </div>
           </SwiperSlide>
