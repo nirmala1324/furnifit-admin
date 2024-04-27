@@ -5,6 +5,10 @@
     {
       "src": "/[^.]+",
       "dest": "/"
+    },
+    {
+        "src": "/furni-data",
+        "dest": "/furni-data"
     }
   ]
 }
