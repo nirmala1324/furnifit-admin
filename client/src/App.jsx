@@ -35,11 +35,11 @@ function App() {
         />
         <Route
           path="/"
-          element={token ? <DashboardPage /> : <Navigate to="/login" />}
+          element={<DashboardPage />}
         />
         <Route
           path="/furni-data"
-          element={token ? <FurniDataPage /> : <Navigate to="/login" />}
+          element={<FurniDataPage />}
         />
         <Route
           path="/*"
