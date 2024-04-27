@@ -31,15 +31,15 @@ function App() {
       <Routes>
         <Route
           path="/login"
-          element={<LoginPage key={token} reloadLoginPage={reloadLoginPage} />}
+          element={<LoginPage/>}
         />
         <Route
           path="/"
-          element={token ? <DashboardPage /> : <Navigate to="/login" />}
+          element={<DashboardPage />}
         />
         <Route
           path="/furni-data"
-          element={token ? <FurniDataPage /> : <Navigate to="/login" />}
+          element={<FurniDataPage/>}
         />
         <Route
           path="/*"
