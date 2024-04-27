@@ -278,7 +278,7 @@ const FurniDataPage = () => {
   const handleCloseAlert = () => {
     setOpenAlert(false);
     // Reload page after success
-    navigate('https://furnifit-admin.vercel.app/furni-data') 
+    window.location.reload() 
   };
 
   const handleCloseErrorAlert = () => {
