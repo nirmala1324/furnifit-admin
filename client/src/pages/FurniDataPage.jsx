@@ -653,6 +653,7 @@ const FurniDataPage = () => {
                     <MenuItem value={"Dressing Room"}>Dressing Room</MenuItem>
                     <MenuItem value={"Garden"}>Garden</MenuItem>
                     <MenuItem value={"Balcony"}>Balcony</MenuItem>
+                    <MenuItem value={"Bars"}>Bars</MenuItem>
                   </Select>
                 </FormControl>
               </div>
