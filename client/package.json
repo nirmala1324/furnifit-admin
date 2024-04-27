@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "proxy": "https://furnifit-admin-api.vercel.app/",
+  "proxy": "https://furnifit-admin-backend.vercel.app",
   "scripts": {
     "start": "vite",
     "dev": "vite",
