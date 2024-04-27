@@ -142,7 +142,7 @@ const FurniDataPage = () => {
     
     if (isFurniIdAvailable) {
     try { 
-      const response = await axios.post("/api/submit-form", formData);
+      const response = await axios.post("https://furnifit-admin-api.vercel.app/submit-form", formData);
       // Clear form data after successful submission if needed
       setFormData({
         furni_id: "",
@@ -189,7 +189,7 @@ const FurniDataPage = () => {
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
     try { 
-      const response = await axios.post("/api/submit-edit-form", formData);
+      const response = await axios.post("https://furnifit-admin-api.vercel.app/submit-edit-form", formData);
       // Clear form data after successful submission if needed
       setFormData({
         furni_id: "",
@@ -222,7 +222,7 @@ const FurniDataPage = () => {
   const handleFurniIdCheck = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/checkFurnitureID/${formData.furni_id}`);
+      const response = await axios.get(`https://furnifit-admin-api.vercel.app/checkFurnitureID/${formData.furni_id}`);
       if (response.data.status === "success" && response.data.message === "already exist") {
         setIsFurniIdAvailable(false);
         setError('Furniture ID already exists. Please choose a different one.');
@@ -253,7 +253,7 @@ const FurniDataPage = () => {
   
   // Get Data
   useEffect(() => {
-    axios.get('/api/getFurniData')
+    axios.get('https://furnifit-admin-api.vercel.app/getFurniData')
     .then(response => {
       // Add a unique 'id' property to each row
       const rowsWithId = response.data.map(row => ({ ...row, id: row.furni_id }));
@@ -266,7 +266,7 @@ const FurniDataPage = () => {
   // DELETE FURNITURE DATA ===============================================================
   const handleDelete = async (furnitureID, furnitureName) => {
     try { 
-      const response = await axios.delete(`/api/deleteFurniture/${furnitureID}`);
+      const response = await axios.delete(`https://furnifit-admin-api.vercel.app/deleteFurniture/${furnitureID}`);
       setAlertMessage(response.data.message);
       setOpenAlert(true);
     } catch (error) {
