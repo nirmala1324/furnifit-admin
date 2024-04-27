@@ -3,18 +3,24 @@ const mongoose = require('mongoose')
 // Creating schema
 const UserSchema = new mongoose.Schema({
     // The fields
-    name: {
+    fullname: {
         type: String,
         required: true
     },
-    age: {
-        type: Number,
+    nickname: {
+        type: String,
+    },
+    username: {
+        type: String
+    },
+    passwword: {
+        type: String,
         required: true
     }
 })
 
 // Creating the model
-const UserModel = mongoose.model("users", UserSchema)
+const UserModel = mongoose.model("admins", UserSchema)
 
 // Export the model
 module.exports = UserModel;

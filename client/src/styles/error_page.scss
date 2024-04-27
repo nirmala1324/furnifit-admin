@@ -1,2 +1,77 @@
 @use "../utilities/functions.scss" as func;
 @import "../utilities/mixins.scss";
+
+.outer-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-size: 10px;
+
+  background: rgba(0, 0, 0, 0.3);
+
+  .bg-container {
+    aspect-ratio: 1280/748;
+    width: 74%;
+    border-radius: 15px;
+    height: unset;
+    background: url("../assets/error/error-bg.webp") center/cover no-repeat;
+
+    display: flex;
+    flex-direction: row;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+    .logo-container {
+      width: 50%;
+      .logo-div {
+        width: 37%;
+        filter: invert(100%) brightness(169%);
+        margin-top: 5%;
+        margin-left: 6%;
+
+        aspect-ratio: 500/ 114;
+        height: unset;
+        background: url("../assets/dashboard/pc_logo_long_1.webp") center/cover
+          no-repeat;
+      }
+    }
+
+    .error-text-container {
+        color: white;
+        width: 50%;
+      display: flex;
+      flex-direction: column;
+      font-size: 10px;
+
+      justify-content: center;
+      
+      .title {
+        font-weight: 600;
+        font-size: 112px;
+      }
+
+      .subtitle {
+        font-weight: 600;
+        font-size: 36px;
+      }
+
+      .text {
+        font-size: 18px;
+      }
+
+      .back-container {
+        font-weight: 600;
+
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        font-size: 15px;
+
+        gap: 2%;
+        margin-top: 7%;
+
+        cursor: pointer;
+      }
+    }
+  }
+}

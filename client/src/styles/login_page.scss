@@ -10,7 +10,7 @@
   flex-direction: column;
 
   .header-container {
-    padding: 0.7% 0 0 0.9%;
+    padding: 1.7% 0 0 2.8%;
     
     .logo {
       aspect-ratio: 500/ 114;
@@ -34,7 +34,7 @@
     .center-container {
         width: 22%;
         height: 52%;
-        background-color: rgba($color: #ffffff, $alpha: 0.6);
+        background-color: rgba($color: #ffffff, $alpha: 0.4);
         border-radius: 15px;
         padding: 3%;
 
@@ -67,6 +67,8 @@
 
   .footer-container {
     padding: 1.2% 0 1.2% 1.9%;
+    border-top: solid 1px;
+    border-radius: 15px
   }
 }
 

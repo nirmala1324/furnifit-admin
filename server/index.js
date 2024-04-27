@@ -4,10 +4,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cloudinary = require("./utilities/dbcloudinary")
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // Export Models
-const UserModel = require("./models/Users");
+const AdminModel = require("./models/Admins");
 const FurnitureModel = require("./models/Furnitures");
+
+// Secret Key Admin Pass
+const secret_key = process.env.VITE_CLOUD_SECRET_KEY;
 
 const app = express();
 app.use(cors());
@@ -247,7 +252,37 @@ app.get('/dataToCharts', async (req, res) => {
 });
 
 
+// ==================================================================================================
+// API FOR ADMIN LOGIN
 
+// Login API
+app.post('/login', async (req, res) => {
+  console.log(secret_key);
+  const { username, password } = req.body;
+  const salt = await bcrypt.genSalt(10);
+
+  // Hash the password with the generated salt
+  const hashedPassword = await bcrypt.hash(password, salt);
+  console.log(hashedPassword)
+
+  // Find user by email
+  const admin = await AdminModel.findOne({ username });
+  if (!admin) {
+    return res.status(404).json({ message: 'admin not found' });
+  }
+
+  // Validate password
+  const validPassword = await AdminModel.findOne({ password });
+  if (!validPassword) {
+    return res.status(400).json({ message: 'Invalid password' });
+  }
+
+  const adminData = await AdminModel.find({ username: 'nirmala' });
+
+  // Create and send JWT token
+  const token = jwt.sign({ id: admin._id }, secret_key, { expiresIn: '1h' });
+  res.json({ token, adminData });
+});
 
 
 

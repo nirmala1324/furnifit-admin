@@ -543,13 +543,6 @@ const FurniDataPage = () => {
           </div>
           <div className="separator"></div>
           <div className="main-part">
-            <div className="top-content">
-              <div className="welcome-text">Hi Andrea 🖖</div>
-              <div className="account-container">
-                <div className="profpic"></div>
-                <div className="fullname">Adrea Hirata</div>
-              </div>
-            </div>
             <div className="title-page">Furniture Data</div>
             <div className="main-content">
               <div className="table-container">

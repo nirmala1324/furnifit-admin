@@ -6,7 +6,7 @@ import axios from "axios";
 import { DataGrid } from '@mui/x-data-grid';
 
 // ROUTING
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // Importing icons
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
@@ -14,6 +14,10 @@ import ListAltRoundedIcon from "@mui/icons-material/ListAltRounded";
 import Charts from "../components/Charts";
 
 const DashboardPage = () => {
+
+  // Access location state
+  const { state } = useLocation();
+  const { adminData } = state || {}; // Destructure adminData, set default value to {} if state is undefined
   
   const navigate = useNavigate() // Goes to homepage
 
@@ -97,13 +101,15 @@ const DashboardPage = () => {
         </div>
         <div className="separator"></div>
         <div className="main-part">
+        {adminData && (
           <div className="top-content">
-            <div className="welcome-text">Welcome back, Andrea 🖖</div>
+            <div className="welcome-text">Welcome back, {adminData.nickname} 🖖</div>
             <div className="account-container">
               <div className="profpic"></div>
-              <div className="fullname">Adrea Hirata</div>
+              <div className="fullname">{adminData.nickname}</div>
             </div>
           </div>
+        )}
           <div className="title-page">Dashboard</div>
           <div className="main-content">
             <div className="left-container">
