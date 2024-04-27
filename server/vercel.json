@@ -1,10 +1,9 @@
 {
   "version": 2,
   "builds": [{ "src": "*.js", "use": "@vercel/node" }],
-  "rewrites": [ { "source": "/furni-data", "destination": "/FurniDataPage.jsx" } ],
   "routes": [
     {
-      "src": "(/.*)",
+      "src": "/[^.]+",
       "dest": "/"
     }
   ]
