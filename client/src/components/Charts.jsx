@@ -49,7 +49,7 @@ const Charts = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/dataToCharts');
+        const response = await axios.get('https://furnifit-admin-backend.vercel.app/dataToCharts');
         // Fetch and set other data sets here if needed
         
         // Set Style Data
