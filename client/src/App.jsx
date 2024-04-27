@@ -16,7 +16,7 @@ function App() {
     setLoading(false); // Set loading to false once token is retrieved
   }, []);
 
-  // Function to force reload the login page
+  // Function to reload the login page
   const reloadLoginPage = () => {
     localStorage.removeItem('token'); // Remove token from local storage
     window.location.reload(); // Reload the page
@@ -29,17 +29,17 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route
+      <Route
           path="/login"
-          element={<LoginPage/>}
+          element={<LoginPage key={token} reloadLoginPage={reloadLoginPage} />}
         />
         <Route
           path="/"
-          element={<DashboardPage />}
+          element={token ? <DashboardPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/furni-data"
-          element={<FurniDataPage/>}
+          element={token ? <FurniDataPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/*"

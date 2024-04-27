@@ -21,7 +21,7 @@ app.use(express.json()); // whenever data passed from frontend to backend
                          // it will goes error if not
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://nirmalapusparatna20031107:npr20031107@cluster0.cqhgovi.mongodb.net/dbfurnifit')
+mongoose.connect(process.env.VITE_MONGODB_URL)
 
 const db = mongoose.connection;
 
