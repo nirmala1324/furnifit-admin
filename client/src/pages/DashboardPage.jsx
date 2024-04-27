@@ -27,7 +27,7 @@ const DashboardPage = () => {
   useEffect( () => {
     const fetchTotalDataCount = async () => {
       try {
-        const response = await axios.get('/api/dataToCharts');
+        const response = await axios.get('https://furnifit-admin-backend.vercel.app/dataToCharts');
 
         setTotalData(response.data.totalCount)
 
@@ -60,7 +60,7 @@ const DashboardPage = () => {
 
   // Get The Data
   useEffect(() => {
-    axios.get('/api/getFurniData')
+    axios.get('https://furnifit-admin-backend.vercel.app/getFurniData')
     .then(response => {
       // Add a unique 'id' property to each row
       const rowsWithId = response.data.map(row => ({ ...row, id: row.furni_id }));
