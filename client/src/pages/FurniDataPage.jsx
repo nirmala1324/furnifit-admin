@@ -686,10 +686,12 @@ const FurniDataPage = () => {
                     <MenuItem value={"Dining Table"}>Dining Table</MenuItem>
                     <MenuItem value={"Mirror"}>Mirror</MenuItem>
                     <MenuItem value={"Dining Chair"}>Dining Chair</MenuItem>
-                    <MenuItem value={"Pouf"}>Pou</MenuItem>
+                    <MenuItem value={"Pouf"}>Pouf</MenuItem>
                     <MenuItem value={"Doormat"}>Doormat</MenuItem>
                     <MenuItem value={"Desk"}>Desk</MenuItem>
                     <MenuItem value={"Seat/Bench"}>Seat/ Bench</MenuItem>
+                    <MenuItem value={"Kitchen Island"}>Kitchen Island</MenuItem>
+                    <MenuItem value={"Dresser"}>Dresser</MenuItem>
                   </Select>
                 </FormControl>
               </div>
