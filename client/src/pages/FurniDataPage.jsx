@@ -362,6 +362,8 @@ const FurniDataPage = () => {
     setIsOpen(false);
   };
 
+  const targetSizeInBytes = 1024 * 1024 * 3; // 3MB
+
   function resizeAndCompressBase64Image(base64Image, targetSizeInKB) {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -391,7 +393,7 @@ const FurniDataPage = () => {
         ctx.drawImage(img, 0, 0, width, height);
   
         // Initialize quality for compression
-        let quality = 0.9; // Initial quality
+        let quality = 3; // Initial quality
   
         // Convert canvas to base64-encoded image with specified quality
         let resizedBase64Image = canvas.toDataURL('image/jpeg', quality); // Initial conversion
@@ -467,7 +469,7 @@ const FurniDataPage = () => {
       const dataURL = canvasEle.toDataURL();
   
       // Resize and compress the base64 image if necessary
-      resizeAndCompressBase64Image(dataURL, 100) // Check if image exceeds 100KB and resize if necessary
+      resizeAndCompressBase64Image(dataURL, targetSizeInBytes) // Check if image exceeds 100KB and resize if necessary
         .then(resizedImage => {
           setImgAfterCrop(resizedImage);
           setIsOpen(false);
