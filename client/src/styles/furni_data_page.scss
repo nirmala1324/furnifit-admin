@@ -39,6 +39,10 @@
     justify-content: center;
   }
 
+  .close-button:hover {
+    cursor: pointer;
+  }
+
   form {
     display: flex;
     flex-direction: column;
@@ -60,11 +64,14 @@
     .form-container {
       width: 100%;
       display: flex;
-      gap: 2%;
+      justify-content: space-between;
       margin-top: 2%;
+      height: 31vw;
+      overflow: scroll;
+      padding-top: 0.5vw;
 
       .left-container {
-        width: 47%;
+        width: 49%;
 
         .check-container {
           display: flex;
@@ -86,7 +93,14 @@
       }
 
       .right-container {
-        width: 47%;
+        width: 49%;
+
+        .line {
+          height: 0.3px;
+          background-color: #bebebe;
+          width: 100%;
+          margin-top: 1.7vw;
+        }
         
         .furni-dimension-label {
           color: #6f6e6e;
@@ -98,7 +112,7 @@
 
           }
 
-          .line {
+          .line.line-furni {
             height: 0.3px;
             background-color: #929292;
             width: 68%;
@@ -114,6 +128,28 @@
           margin-top: 2%;
           display: flex;
           gap: 2.2%;
+        }
+        .furni-picture {
+          display: flex;
+          align-items: start;
+          justify-content: end;
+          height: 15vw;
+          
+          .furni-picture-inner-container {
+            margin-top: 0.7vw;
+            width: 28vw;
+            height: 15vw;
+
+            .theButton {
+              justify-content: start;
+              align-items: center;
+              display: flex;
+            }
+
+            .cropped-container {
+              width: 13vw;
+            }
+          }
         }
       }
     }

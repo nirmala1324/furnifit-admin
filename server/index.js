@@ -80,7 +80,7 @@ app.get("/checkFurnitureID/:furnitureID", async (req, res) => {
 // API Add Data form from Client Side
 app.post("/submit-form", async (req, res ) => {
   // Extracting data from the POST request body
-  const { furni_id, furni_name, space_cat, sub_space_cat, detail_material, furni_desc, furni_dimension, furni_picture, furni_type, furni_style, material_tag, vectary_link } = req.body;
+  const { furni_id, furni_name, space_cat, sub_space_cat, detail_material, furni_desc, furni_dimension, detail_dimension, furni_picture, furni_type, furni_style, material_tag, vectary_link } = req.body;
   
   try {
     // Add the image to Cloudinary and get response
@@ -95,6 +95,7 @@ app.post("/submit-form", async (req, res ) => {
       detail_material, 
       furni_desc,
       furni_dimension, 
+      detail_dimension,
       furni_picture: {
         public_id: result.public_id,
         url: result.secure_url
@@ -114,7 +115,7 @@ app.post("/submit-form", async (req, res ) => {
 // API Add Data form from Client Side
 app.post("/submit-edit-form", async (req, res ) => {
   // Extracting data from the POST request body
-  const { furni_id, furni_name, space_cat, sub_space_cat, detail_material, furni_desc, furni_dimension, furni_picture, furni_type, furni_style, material_tag, vectary_link, public_id } = req.body;
+  const { furni_id, furni_name, space_cat, sub_space_cat, detail_material, furni_desc, furni_dimension, detail_dimension, furni_picture, furni_type, furni_style, material_tag, vectary_link, public_id } = req.body;
   
   try {
     //===============================================================================
@@ -160,6 +161,7 @@ app.post("/submit-edit-form", async (req, res ) => {
           detail_material, 
           furni_desc,
           furni_dimension, 
+          detail_dimension,
           furni_picture: updatedFurniPicture, // Updated furniture picture
           furni_type, 
           furni_style, 

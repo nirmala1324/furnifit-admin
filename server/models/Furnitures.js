@@ -31,6 +31,10 @@ const FurnituresSchema = new mongoose.Schema({
         type: [Number],
         default: []
     },
+    detail_dimension: {
+        type: String,
+        required: true
+    },
     furni_picture: {
         public_id: {
             type: String,

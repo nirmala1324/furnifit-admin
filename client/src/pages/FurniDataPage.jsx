@@ -113,6 +113,7 @@ const FurniDataPage = () => {
     detail_material: "",
     furni_desc: "",
     furni_dimension: ['', '', ''],
+    detail_dimension:"",
     furni_picture: { public_id: "", url: "" },
     furni_type: "",
     furni_style: "",
@@ -142,7 +143,7 @@ const FurniDataPage = () => {
     
     if (isFurniIdAvailable) {
     try { 
-      const response = await axios.post("https://furnifit-admin-backend.vercel.app/submit-form", formData);
+      const response = await axios.post("/submit-form", formData);
       // Clear form data after successful submission if needed
       setFormData({
         furni_id: "",
@@ -152,11 +153,12 @@ const FurniDataPage = () => {
         detail_material: "",
         furni_desc: "",
         furni_dimension: ['', '', ''],
+        detail_dimension: "",
+        vectary_link: "",
         furni_picture: { public_id: "", url: "" },
         furni_type: "",
         furni_style: "",
         material_tag: [],
-        vectary_link: "",
       });
       toggleForm;
       setAlertMessage(response.data.message);
@@ -189,7 +191,7 @@ const FurniDataPage = () => {
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
     try { 
-      const response = await axios.post("https://furnifit-admin-backend.vercel.app/submit-edit-form", formData);
+      const response = await axios.post("/submit-edit-form", formData);
       // Clear form data after successful submission if needed
       setFormData({
         furni_id: "",
@@ -199,6 +201,7 @@ const FurniDataPage = () => {
         detail_material: "",
         furni_desc: "",
         furni_dimension: ['', '', ''],
+        detail_dimension: "",
         furni_picture: { public_id: "", url: "" },
         furni_type: "",
         furni_style: "",
@@ -222,7 +225,7 @@ const FurniDataPage = () => {
   const handleFurniIdCheck = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`https://furnifit-admin-backend.vercel.app/checkFurnitureID/${formData.furni_id}`);
+      const response = await axios.get(`/checkFurnitureID/${formData.furni_id}`);
       if (response.data.status === "success" && response.data.message === "already exist") {
         setIsFurniIdAvailable(false);
         setError('Furniture ID already exists. Please choose a different one.');
@@ -253,7 +256,7 @@ const FurniDataPage = () => {
   
   // Get Data
   useEffect(() => {
-    axios.get('https://furnifit-admin-backend.vercel.app/getFurniData')
+    axios.get('/getFurniData')
     .then(response => {
       // Add a unique 'id' property to each row
       const rowsWithId = response.data.map(row => ({ ...row, id: row.furni_id }));
@@ -266,7 +269,7 @@ const FurniDataPage = () => {
   // DELETE FURNITURE DATA ===============================================================
   const handleDelete = async (furnitureID, furnitureName) => {
     try { 
-      const response = await axios.delete(`https://furnifit-admin-backend.vercel.app/deleteFurniture/${furnitureID}`);
+      const response = await axios.delete(`/deleteFurniture/${furnitureID}`);
       setAlertMessage(response.data.message);
       setOpenAlert(true);
     } catch (error) {
@@ -320,6 +323,17 @@ const FurniDataPage = () => {
     { field: 'furni_dimension', headerName: 'Dimension', width: 150, 
       renderCell: (params) => (params.row.furni_dimension[0] + " x " + params.row.furni_dimension[1] + " x " + params.row.furni_dimension[2] + " mm") 
     },
+    { field: 'detail_dimension', headerName: 'Detail Dimension', width: 300, 
+    renderCell: (params) => (
+      <TextField
+        sx={{ mt: 1 }}
+        id="outlined-multiline-static"
+        size="small"
+        fullWidth
+        value={params.row.detail_dimension}
+        multiline
+        rows={4.2}
+      />)},
     { field: 'furni_picture', headerName: 'Picture', width: 150, renderCell: (params) => (<img src={params.row.furni_picture.url} alt="Furniture" style={{ width: '100%' }}/>)},
     { field: 'furni_type', headerName: 'Type', width: 130 },
     { field: 'vectary_link', headerName: 'Vectary Link', width: 200, 
@@ -763,7 +777,7 @@ const FurniDataPage = () => {
               {/* Data Form Submission Part 8 */}
               <div className="detail-material">
                 <TextField
-                  sx={{ mt: 1.5, mb: 3 }}
+                  sx={{ mt: 1.5, mb: 1.5 }}
                   name="detail_material"
                   id="outlined-multiline-static"
                   label="Detail Material"
@@ -776,15 +790,11 @@ const FurniDataPage = () => {
                   rows={2.6}
                 />
               </div>
-            </div>
-
-            {/* RIGHT SECTION */}
-            <div className="right-container">
 
               {/* Data Form Submission Part 9 */}
               <div className="furniture-description">
                 <TextField
-                  sx={{ mb: 1.5 }}
+                  sx={{ mb: 3 }}
                   name="furni_desc"
                   id="outlined-multiline-static"
                   label="Furniture Description"
@@ -796,10 +806,14 @@ const FurniDataPage = () => {
                   rows={2.6}
                 />
               </div>
+            </div>
+
+            {/* RIGHT SECTION */}
+            <div className="right-container">
 
               <div className="furni-dimension-label">
                 <div className="text">Furniture Dimension</div>
-                <div className="line"></div>
+                <div className="line line-furni"></div>
               </div>
 
               {/* Data Form Submission Part 10 */}
@@ -850,10 +864,28 @@ const FurniDataPage = () => {
                   />
                 </div>
               </div>
-              
+
+              <div className="line"></div>
+
               {/* Data Form Submission Part 11 */}
+              <div className="detail-dimension">
+                <TextField
+                  sx={{ mt: 3 }}
+                  name="detail_dimension"
+                  id="outlined-multiline-static"
+                  label="Detail Dimension"
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                  value={formData.detail_dimension}
+                  multiline
+                  rows={3.5}
+                />
+              </div>
+              
+              {/* Data Form Submission Part 12 */}
               <div className="name-container">
-                <TextField sx={{ mt: 1.5, mb:1.5 }} size="small" label="Vectary Link" name="vectary_link" type="text" value={formData.vectary_link} onChange={handleChange} fullWidth required />
+                <TextField sx={{ mt: 1.5, mb:3 }} size="small" label="Vectary Link" name="vectary_link" type="text" value={formData.vectary_link} onChange={handleChange} fullWidth required />
               </div>
               
               <div className="furni-dimension-label">
@@ -861,7 +893,7 @@ const FurniDataPage = () => {
                 <div className="line2"></div>
               </div>
 
-              {/* Data Form Submission Part 12 */}
+              {/* Data Form Submission Part 13 */}
               <div className="furni-picture">
                 <div
                   className="furni-picture-inner-container"
@@ -887,6 +919,7 @@ const FurniDataPage = () => {
                   This is the content of the modal.
                 </CustomModal>
               </div>
+
             </div>
           </div>
           <div className="button-submit">

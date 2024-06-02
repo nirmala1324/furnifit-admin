@@ -15,7 +15,7 @@ import {
 const violetBase = "#248b96";
 
 const theme = createTheme({
-  palette: {
+  palette: {  
     violet: {
       main: violetBase,
       light: alpha(violetBase, 0.5),
